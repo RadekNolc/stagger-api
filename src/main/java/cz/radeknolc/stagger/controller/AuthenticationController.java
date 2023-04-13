@@ -1,0 +1,49 @@
+package cz.radeknolc.stagger.controller;
+
+import cz.radeknolc.stagger.helper.auth.AuthenticationUtils;
+import cz.radeknolc.stagger.model.auth.LoginRequest;
+import cz.radeknolc.stagger.model.auth.TokenResponse;
+import cz.radeknolc.stagger.model.util.ResponseMessage;
+import cz.radeknolc.stagger.model.util.ResponseMessageType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+
+@RestController
+@CrossOrigin
+public class AuthenticationController {
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private AuthenticationUtils authenticationUtils;
+
+    @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
+    public ResponseEntity<?> authenticate(@Validated @RequestBody LoginRequest loginRequest) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String token = authenticationUtils.generateToken(authentication);
+            Date expiration = authenticationUtils.getExpirationFromToken(token);
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+            return ResponseEntity.ok(new TokenResponse(token, expiration, userDetails.getUsername()));
+        } catch (DisabledException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage(ResponseMessageType.ERROR, "Unauthorized"));
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage(ResponseMessageType.ERROR, "Bad credentials"));
+        }
+    }
+}
