@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,6 +12,5 @@ import java.util.Date;
 public class TokenResponse {
 
     private String token;
-    private Date expiration;
     private String username;
 }
