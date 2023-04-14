@@ -37,9 +37,9 @@ public class AuthenticationController {
 
             return ResponseEntity.ok(new TokenResponse(token, userDetails.getUsername()));
         } catch (DisabledException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage(ResponseMessageType.ERROR, "Unauthorized"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage("ACCOUNT_DISABLED"));
         } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage(ResponseMessageType.ERROR, "Bad credentials"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage("BAD_CREDENTIALS"));
         }
     }
 }

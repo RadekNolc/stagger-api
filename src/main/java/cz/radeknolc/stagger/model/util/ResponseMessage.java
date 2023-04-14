@@ -7,11 +7,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ResponseMessage {
 
-    private ResponseMessageType status;
     private String message;
+    private ResponseMessageLanguage language;
+    private static final ResponseMessageLanguage defaultLanguage = ResponseMessageLanguage.EN;
 
     public ResponseMessage(String message) {
-        status = ResponseMessageType.OK;
         this.message = message;
+        this.language = defaultLanguage;
     }
 }
