@@ -54,11 +54,16 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception { //TODO: Check authorizing - is not working
-        httpSecurity.cors().and().csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(authenticationEntryPointImpl).and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().requestMatchers("/authenticate").permitAll()
-                .anyRequest().permitAll();
+        httpSecurity.cors();
+        httpSecurity.csrf().disable();
+
+        httpSecurity.exceptionHandling().authenticationEntryPoint(authenticationEntryPointImpl).and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        httpSecurity.authorizeHttpRequests(request -> request
+                .requestMatchers("/authenticate").permitAll()
+                .anyRequest().authenticated()
+        );
 
         httpSecurity.authenticationProvider(authenticationProvider());
         httpSecurity.addFilterBefore(authenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
