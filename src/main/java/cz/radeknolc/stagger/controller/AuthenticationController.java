@@ -15,10 +15,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin
 public class AuthenticationController {
 
     @Autowired
@@ -37,9 +39,9 @@ public class AuthenticationController {
 
             return ResponseEntity.ok(new TokenResponse(token, userDetails.getUsername()));
         } catch (DisabledException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage("ACCOUNT_DISABLED"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage<>("ACCOUNT_DISABLED"));
         } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage("BAD_CREDENTIALS"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage<>("BAD_CREDENTIALS"));
         }
     }
 }

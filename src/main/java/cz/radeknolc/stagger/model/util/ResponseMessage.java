@@ -5,14 +5,13 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ResponseMessage {
+public class ResponseMessage<T> {
 
-    private String message;
+    private T content;
     private ResponseMessageLanguage language;
     private static final ResponseMessageLanguage defaultLanguage = ResponseMessageLanguage.EN;
 
-    public ResponseMessage(String message) {
-        this.message = message;
-        this.language = defaultLanguage;
+    public ResponseMessage(T content) {
+        this(content, null);
     }
 }
