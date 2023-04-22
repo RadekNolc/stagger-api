@@ -1,7 +1,7 @@
 package cz.radeknolc.stagger.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import cz.radeknolc.stagger.model.util.ResponseMessageLanguage;
+import cz.radeknolc.stagger.model.util.TextLanguage;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -25,10 +25,10 @@ public class User extends BaseEntity {
     private String emailAddress;
     private String phoneNumber;
     @Enumerated(EnumType.STRING)
-    private ResponseMessageLanguage language;
+    private TextLanguage language;
     private Boolean isActive;
 
-    public User(Long id, String username, String password, String emailAddress, String phoneNumber, ResponseMessageLanguage language, Boolean isActive) {
+    public User(Long id, String username, String password, String emailAddress, String phoneNumber, TextLanguage language, Boolean isActive) {
         super(id);
         this.username = username;
         this.password = password;

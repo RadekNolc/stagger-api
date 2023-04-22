@@ -1,7 +1,7 @@
  package cz.radeknolc.stagger.service;
 
 import cz.radeknolc.stagger.model.User;
-import cz.radeknolc.stagger.model.util.ResponseMessageLanguage;
+import cz.radeknolc.stagger.model.util.TextLanguage;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,8 +16,12 @@ public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = -1657293349120079617L;
     private final User user;
 
-    public UserDetailsImpl(Long id, String username, String password, String email, String phoneNumber, ResponseMessageLanguage language, boolean isActive) {
+    public UserDetailsImpl(Long id, String username, String password, String email, String phoneNumber, TextLanguage language, boolean isActive) {
         this.user = new User(id, username, password, email, phoneNumber, language, isActive);
+    }
+
+    public TextLanguage getLanguage() {
+        return user.getLanguage();
     }
 
     public static UserDetailsImpl build(User user) {

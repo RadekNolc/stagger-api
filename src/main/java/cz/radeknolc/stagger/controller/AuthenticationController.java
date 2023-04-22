@@ -37,7 +37,7 @@ public class AuthenticationController {
             String token = authenticationUtils.generateToken(authentication);
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-            return ResponseEntity.ok(new TokenResponse(token, userDetails.getUsername()));
+            return ResponseEntity.ok(new TokenResponse(token, userDetails.getUsername(), userDetails.getLanguage()));
         } catch (DisabledException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage<>("ACCOUNT_DISABLED"));
         } catch (BadCredentialsException e) {

@@ -8,7 +8,7 @@ import lombok.Getter;
 public class ResponseMessage<T> {
 
     private T content;
-    private ResponseMessageLanguage language;
+    private TextLanguage language;
 
     public ResponseMessage(T content) {
         this(content, null);
