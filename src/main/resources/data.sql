@@ -23,3 +23,17 @@ INSERT INTO "roles_users_map" ("user_id", "role_id")
 VALUES (2, 3);
 INSERT INTO "roles_users_map" ("user_id", "role_id")
 VALUES (2, 3);
+
+/* UNIVERSITY TABLE */
+INSERT INTO "university" ("id", "name", "created_at", "created_by", "updated_at", "updated_by")
+VALUES (1, 'Západočeská univerzita', '2023-04-16 00:13:47', 'system', NULL, NULL);
+
+/* SUBJECT TABLE */
+INSERT INTO "subject" ("id", "university_id", "department", "name")
+VALUES (1, 1, 'KEM', 'EK1');
+INSERT INTO "subject" ("id", "university_id", "department", "name")
+VALUES (2, 1, 'KIV', 'PPA2');
+
+/* USER x UNIVERSITY mapping */
+INSERT INTO "universities_users_map" ("user_id", "university_id")
+VALUES (2, 1);
