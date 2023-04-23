@@ -33,17 +33,6 @@ public class User extends BaseEntity {
     )
     private Set<Role> roles;
 
-    public User(Long id, String username, String password, String emailAddress, String phoneNumber, TextLanguage language, Boolean isActive, Set<Role> roles) {
-        super(id);
-        this.username = username;
-        this.password = password;
-        this.emailAddress = emailAddress;
-        this.phoneNumber = phoneNumber;
-        this.language = language;
-        this.isActive = isActive;
-        this.roles = roles;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof User target)) return false; // Kontrola, zda neporovnáváme uživatele s lachtanem

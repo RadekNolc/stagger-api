@@ -19,9 +19,6 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 public class BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -34,8 +31,4 @@ public class BaseEntity {
     @LastModifiedBy
     @Column(insertable = false)
     private String updatedBy;
-
-    public BaseEntity(Long id) {
-        this.id = id;
-    }
 }

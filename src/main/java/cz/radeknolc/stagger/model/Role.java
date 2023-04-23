@@ -16,8 +16,11 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "role")
-public class Role extends BaseEntity {
+public class Role {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     @Enumerated(EnumType.STRING)
     private RoleName name;
     @ManyToMany(mappedBy = "roles")
