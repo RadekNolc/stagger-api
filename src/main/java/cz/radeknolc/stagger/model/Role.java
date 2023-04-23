@@ -1,6 +1,7 @@
 package cz.radeknolc.stagger.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import cz.radeknolc.stagger.model.map.UserRole;
 import cz.radeknolc.stagger.model.util.RoleName;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,7 +24,7 @@ public class Role {
     private Long id;
     @Enumerated(EnumType.STRING)
     private RoleName name;
-    @ManyToMany(mappedBy = "roles")
+    @OneToMany(mappedBy = "role")
     @JsonIgnore
-    private Set<User> users;
+    private Set<UserRole> users;
 }

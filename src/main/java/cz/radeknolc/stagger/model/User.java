@@ -1,6 +1,8 @@
 package cz.radeknolc.stagger.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import cz.radeknolc.stagger.model.map.UserRole;
+import cz.radeknolc.stagger.model.map.UserUniversity;
 import cz.radeknolc.stagger.model.util.TextLanguage;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,12 +28,10 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private TextLanguage language;
     private Boolean isActive;
-    @ManyToMany(targetEntity = Role.class, cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
-    @JoinTable(name = "roles_users_map",
-            joinColumns = @JoinColumn(name = "user_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "role_id", nullable = false)
-    )
-    private Set<Role> roles;
+    @OneToMany(targetEntity = UserRole.class, fetch = FetchType.EAGER, mappedBy = "user")
+    private Set<UserRole> roles;
+    @OneToMany(targetEntity = UserUniversity.class, fetch = FetchType.EAGER, mappedBy = "user")
+    private Set<UserUniversity> universities;
 
     @Override
     public boolean equals(Object o) {

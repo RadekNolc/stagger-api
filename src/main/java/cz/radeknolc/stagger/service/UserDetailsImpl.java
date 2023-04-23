@@ -1,7 +1,8 @@
  package cz.radeknolc.stagger.service;
 
- import cz.radeknolc.stagger.model.Role;
  import cz.radeknolc.stagger.model.User;
+ import cz.radeknolc.stagger.model.map.UserRole;
+ import cz.radeknolc.stagger.model.map.UserUniversity;
  import cz.radeknolc.stagger.model.util.TextLanguage;
  import org.springframework.security.authentication.AnonymousAuthenticationToken;
  import org.springframework.security.core.GrantedAuthority;
@@ -20,8 +21,8 @@
     private static final long serialVersionUID = -1657293349120079617L;
     private final User user;
 
-    public UserDetailsImpl(Long id, String username, String password, String email, String phoneNumber, TextLanguage language, boolean isActive, Set<Role> roles) {
-        this.user = new User(id, username, password, email, phoneNumber, language, isActive, roles);
+    public UserDetailsImpl(Long id, String username, String password, String email, String phoneNumber, TextLanguage language, boolean isActive, Set<UserRole> roles, Set<UserUniversity> universities) {
+        this.user = new User(id, username, password, email, phoneNumber, language, isActive, roles, universities);
     }
 
     public TextLanguage getLanguage() {
@@ -29,7 +30,7 @@
     }
 
     public static UserDetailsImpl build(User user) {
-        return new UserDetailsImpl(user.getId(), user.getUsername(), user.getPassword(), user.getEmailAddress(), user.getPhoneNumber(), user.getLanguage(), user.getIsActive(), user.getRoles());
+        return new UserDetailsImpl(user.getId(), user.getUsername(), user.getPassword(), user.getEmailAddress(), user.getPhoneNumber(), user.getLanguage(), user.getIsActive(), user.getRoles(), user.getUniversities());
     }
 
     public static UserDetailsImpl getLoggedUser() {
@@ -42,7 +43,7 @@
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName())).collect(Collectors.toList());
+        return user.getRoles().stream().map(roleMapper -> new SimpleGrantedAuthority("ROLE_" + roleMapper.getRole().getName())).collect(Collectors.toList());
     }
 
     @Override
