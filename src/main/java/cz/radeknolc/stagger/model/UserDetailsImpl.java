@@ -1,12 +1,7 @@
- package cz.radeknolc.stagger.service;
+ package cz.radeknolc.stagger.model;
 
- import cz.radeknolc.stagger.model.User;
- import cz.radeknolc.stagger.model.map.UserRole;
- import cz.radeknolc.stagger.model.map.UserUniversity;
- import cz.radeknolc.stagger.model.util.TextLanguage;
  import org.springframework.security.authentication.AnonymousAuthenticationToken;
  import org.springframework.security.core.GrantedAuthority;
- import org.springframework.security.core.authority.SimpleGrantedAuthority;
  import org.springframework.security.core.context.SecurityContextHolder;
  import org.springframework.security.core.userdetails.UserDetails;
 
@@ -25,12 +20,12 @@
         this.user = new User(id, username, password, email, phoneNumber, language, isActive, roles, universities);
     }
 
-    public TextLanguage getLanguage() {
-        return user.getLanguage();
+    public UserDetailsImpl(User user) {
+        this(user.getId(), user.getUsername(), user.getPassword(), user.getEmailAddress(), user.getPhoneNumber(), user.getLanguage(), user.getIsActive(), user.getRoles(), user.getUniversities());
     }
 
-    public static UserDetailsImpl build(User user) {
-        return new UserDetailsImpl(user.getId(), user.getUsername(), user.getPassword(), user.getEmailAddress(), user.getPhoneNumber(), user.getLanguage(), user.getIsActive(), user.getRoles(), user.getUniversities());
+    public TextLanguage getLanguage() {
+        return user.getLanguage();
     }
 
     public static UserDetailsImpl getLoggedUser() {
@@ -43,7 +38,7 @@
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRoles().stream().map(roleMapper -> new SimpleGrantedAuthority("ROLE_" + roleMapper.getRole().getName())).collect(Collectors.toList());
+        return user.getRoles().stream().map(UserRole::getRole).collect(Collectors.toList());
     }
 
     @Override

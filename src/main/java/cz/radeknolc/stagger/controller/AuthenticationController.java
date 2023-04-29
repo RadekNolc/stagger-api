@@ -1,10 +1,10 @@
 package cz.radeknolc.stagger.controller;
 
-import cz.radeknolc.stagger.helper.auth.AuthenticationUtils;
-import cz.radeknolc.stagger.model.auth.LoginRequest;
-import cz.radeknolc.stagger.model.auth.TokenResponse;
-import cz.radeknolc.stagger.model.util.ResponseMessage;
-import cz.radeknolc.stagger.service.UserDetailsImpl;
+import cz.radeknolc.stagger.util.AuthenticationUtils;
+import cz.radeknolc.stagger.model.request.LoginRequest;
+import cz.radeknolc.stagger.model.payload.TokenResponse;
+import cz.radeknolc.stagger.model.payload.ResponseMessage;
+import cz.radeknolc.stagger.model.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,7 @@
 package cz.radeknolc.stagger.service;
 
 import cz.radeknolc.stagger.model.User;
+import cz.radeknolc.stagger.model.UserDetailsImpl;
 import cz.radeknolc.stagger.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByUsername(username);
         if (user.isPresent()) {
-            return UserDetailsImpl.build(user.get());
+            return new UserDetailsImpl(user.get());
         }
 
         throw new UsernameNotFoundException("User not found with username " + username);

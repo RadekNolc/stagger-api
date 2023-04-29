@@ -1,4 +1,4 @@
-package cz.radeknolc.stagger.helper.auth;
+package cz.radeknolc.stagger.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

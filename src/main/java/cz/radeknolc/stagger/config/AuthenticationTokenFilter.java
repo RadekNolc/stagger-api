@@ -1,6 +1,6 @@
-package cz.radeknolc.stagger.security;
+package cz.radeknolc.stagger.config;
 
-import cz.radeknolc.stagger.helper.auth.AuthenticationUtils;
+import cz.radeknolc.stagger.util.AuthenticationUtils;
 import cz.radeknolc.stagger.service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

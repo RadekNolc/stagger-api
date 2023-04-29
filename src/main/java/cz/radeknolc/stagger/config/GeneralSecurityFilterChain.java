@@ -1,17 +1,13 @@
-package cz.radeknolc.stagger.security;
+package cz.radeknolc.stagger.config;
 
-import cz.radeknolc.stagger.config.WebSecurityConfig;
-import cz.radeknolc.stagger.helper.auth.AuthenticationEntryPointImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-@Configuration
-public abstract class DefaultSecurityFilterChain {
+public abstract class GeneralSecurityFilterChain {
 
     @Autowired
     protected AuthenticationEntryPointImpl authenticationEntryPoint;

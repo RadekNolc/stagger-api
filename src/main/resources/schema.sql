@@ -27,9 +27,9 @@ CREATE TABLE IF NOT EXISTS "role" (
 
 DROP TABLE IF EXISTS "roles_users_map";
 CREATE TABLE IF NOT EXISTS "roles_users_map" (
+    "id" BIGINT NOT NULL AUTO_INCREMENT,
     "user_id" BIGINT NOT NULL,
     "role_id" BIGINT NOT NULL,
-    "id" BIGINT NOT NULL AUTO_INCREMENT,
     PRIMARY KEY ("id")
 );
 

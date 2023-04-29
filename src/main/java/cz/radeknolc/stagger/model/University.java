@@ -1,7 +1,6 @@
 package cz.radeknolc.stagger.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import cz.radeknolc.stagger.model.map.UserUniversity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +22,7 @@ public class University extends BaseEntity {
     private Long id;
     private String name;
     @OneToMany(targetEntity = Subject.class, cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "university")
+    @JsonIgnore
     private Set<Subject> subjects;
     @OneToMany(mappedBy = "university")
     @JsonIgnore

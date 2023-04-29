@@ -1,4 +1,4 @@
-package cz.radeknolc.stagger.model.auth;
+package cz.radeknolc.stagger.model.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

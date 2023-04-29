@@ -1,6 +1,6 @@
-package cz.radeknolc.stagger.model.auth;
+package cz.radeknolc.stagger.model.payload;
 
-import cz.radeknolc.stagger.model.util.TextLanguage;
+import cz.radeknolc.stagger.model.TextLanguage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

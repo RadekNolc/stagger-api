@@ -1,15 +1,13 @@
-package cz.radeknolc.stagger.model.map;
+package cz.radeknolc.stagger.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import cz.radeknolc.stagger.model.University;
-import cz.radeknolc.stagger.model.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 
 @Getter
 @Entity
-@Table(name = "universities_users_map")
-public class UserUniversity {
+@Table(name = "roles_users_map")
+public class UserRole {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,7 +17,8 @@ public class UserUniversity {
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     @JsonIgnore
     private User user;
-    @ManyToOne(targetEntity = University.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "university_id", referencedColumnName = "id", nullable = false)
-    private University university;
+    @ManyToOne(targetEntity = Role.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnore
+    private Role role;
 }

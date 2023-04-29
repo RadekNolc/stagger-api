@@ -1,4 +1,4 @@
-package cz.radeknolc.stagger.helper.auth;
+package cz.radeknolc.stagger.util;
 
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
