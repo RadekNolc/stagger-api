@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class UserRole {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long mapId;
     @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
