@@ -1,5 +1,6 @@
 package cz.radeknolc.stagger.model.request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class LoginRequest {
 
+    @NotBlank(message = "NOT_BLANK")
     private String username;
+    @NotBlank(message = "NOT_BLANK")
     private String password;
 }

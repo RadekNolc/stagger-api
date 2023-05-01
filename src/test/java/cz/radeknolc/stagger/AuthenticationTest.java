@@ -71,8 +71,9 @@ public class AuthenticationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new LoginRequest("", ""))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.content").value("BAD_CREDENTIALS"));
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.content.username").value("NOT_BLANK"))
+                .andExpect(jsonPath("$.content.password").value("NOT_BLANK"));
 
         // Wrong password
         mockMvc.perform(MockMvcRequestBuilders.post("/authenticate")
