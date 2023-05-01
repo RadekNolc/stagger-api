@@ -24,6 +24,7 @@ public abstract class GeneralSecurityFilterChain {
 
         httpSecurity.authorizeHttpRequests(request -> request
                 .requestMatchers("/authenticate").permitAll()
+                .requestMatchers("/register").permitAll()
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
                 .anyRequest().authenticated()
         );

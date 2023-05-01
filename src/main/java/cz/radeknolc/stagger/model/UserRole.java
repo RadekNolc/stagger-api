@@ -2,11 +2,15 @@ package cz.radeknolc.stagger.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
 @Table(name = "roles_users_map")
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserRole {
 
     @Id
@@ -21,4 +25,8 @@ public class UserRole {
     @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
     @JsonIgnore
     private Role role;
+
+    public UserRole(User user, Role role) {
+        this(null, user, role);
+    }
 }

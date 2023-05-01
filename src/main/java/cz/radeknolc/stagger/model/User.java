@@ -28,7 +28,7 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private TextLanguage language;
     private Boolean isActive;
-    @OneToMany(targetEntity = UserRole.class, fetch = FetchType.EAGER, mappedBy = "user")
+    @OneToMany(targetEntity = UserRole.class, fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.PERSIST)
     @JsonIgnore
     private Set<UserRole> roles;
     @OneToMany(targetEntity = UserUniversity.class, fetch = FetchType.EAGER, mappedBy = "user")
