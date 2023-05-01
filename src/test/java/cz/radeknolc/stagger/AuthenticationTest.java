@@ -2,7 +2,7 @@ package cz.radeknolc.stagger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.radeknolc.stagger.model.request.LoginRequest;
-import org.junit.jupiter.api.BeforeEach;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,6 +16,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest
+@Sql(scripts = "/data.sql")
+@Transactional
 public class AuthenticationTest {
 
     @Autowired
@@ -23,13 +25,6 @@ public class AuthenticationTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @BeforeEach
-    @Sql("/schema.sql")
-    @Sql("/data.sql")
-    public void beforeEach() {
-
-    }
 
     @Test
     public void testAuthenticationSuccess() throws Exception {
@@ -57,7 +52,7 @@ public class AuthenticationTest {
     }
 
     @Test
-    public void testAuthenticationErrors() throws Exception {
+    public void testAuthenticationError() throws Exception {
         // Not existing username & password
         mockMvc.perform(MockMvcRequestBuilders.post("/authenticate")
                 .contentType(MediaType.APPLICATION_JSON)
