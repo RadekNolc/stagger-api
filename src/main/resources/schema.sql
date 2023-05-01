@@ -6,9 +6,9 @@ CREATE TABLE IF NOT EXISTS "user" (
     "email_address" VARCHAR(50) NOT NULL,
     "phone_number" VARCHAR(20),
     "language" ENUM('EN','CS') NOT NULL DEFAULT 'EN',
-    "is_active" TINYINT NOT NULL DEFAULT 1,
-    "created_at" TIMESTAMP NOT NULL,
-    "created_by" VARCHAR(24) NOT NULL DEFAULT '',
+    "is_active" TINYINT DEFAULT 0,
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "created_by" VARCHAR(24) DEFAULT '',
     "updated_at" TIMESTAMP,
     "updated_by" VARCHAR(24),
     PRIMARY KEY ("id")
@@ -18,10 +18,6 @@ DROP TABLE IF EXISTS "role";
 CREATE TABLE IF NOT EXISTS "role" (
     "id" BIGINT NOT NULL AUTO_INCREMENT,
     "name" ENUM('ADMIN','MODERATOR','USER') NOT NULL DEFAULT 'USER',
-    "created_at" TIMESTAMP NOT NULL,
-    "created_by" VARCHAR(24) NOT NULL DEFAULT '',
-    "updated_at" TIMESTAMP,
-    "updated_by" VARCHAR(24),
     PRIMARY KEY ("id")
 );
 
