@@ -1,7 +1,9 @@
 package cz.radeknolc.stagger.model.request;
 
+import cz.radeknolc.stagger.annotation.Unique;
 import cz.radeknolc.stagger.annotation.ValueOfEnum;
 import cz.radeknolc.stagger.model.TextLanguage;
+import cz.radeknolc.stagger.model.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -16,6 +18,7 @@ import lombok.Setter;
 public class CreateUserRequest {
 
     @NotBlank(message = "NOT_BLANK")
+    @Unique(entityClass = User.class, targetColumn = "username", message = "UNIQUE")
     private String username;
     @NotBlank(message = "NOT_BLANK")
     private String password;
