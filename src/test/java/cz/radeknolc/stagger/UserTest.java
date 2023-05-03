@@ -1,6 +1,7 @@
 package cz.radeknolc.stagger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import cz.radeknolc.stagger.model.TextLanguage;
 import cz.radeknolc.stagger.model.User;
 import cz.radeknolc.stagger.model.request.CreateUserRequest;
 import cz.radeknolc.stagger.repository.UserRepository;
@@ -20,6 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Optional;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc
@@ -45,17 +47,18 @@ public class UserTest {
     public void testUserRegistrationSuccess() throws Exception {
         int originalUsers = userRepository.findAll().size();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/register")
+        mockMvc.perform(MockMvcRequestBuilders.post("/register").with(anonymous())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new CreateUserRequest("register", "register", "register@stagger.cz", "CS"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").value("REGISTRATION_SUCCESS"));
+                .andExpect(jsonPath("$.message").value("REGISTRATION_SUCCESS"));
 
         Assertions.assertEquals(++originalUsers, userRepository.findAll().size()); // Checking if user was created
 
         Optional<User> createdUser = userRepository.findByUsername("register");
         Assertions.assertTrue(createdUser.isPresent()); // Checking if user was created
+        Assertions.assertEquals(TextLanguage.CS, createdUser.get().getLanguage());
         Assertions.assertNotNull(createdUser.get().getIsActive()); // Checking if proper value was set
         Assertions.assertNotNull(createdUser.get().getCreatedAt()); // Checking if created at is not null and set
         Assertions.assertEquals(1, createdUser.get().getRoles().size()); // Checking if user got role
@@ -64,5 +67,36 @@ public class UserTest {
     @Test
     public void testUserRegistrationError() throws Exception {
 
+        mockMvc.perform(MockMvcRequestBuilders.post("/register").with(anonymous())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new CreateUserRequest("duplicate", "duplicate", "duplicate@stagger.cz", "CS"))))
+                .andReturn();
+
+        // Checking for duplicate username
+        mockMvc.perform(MockMvcRequestBuilders.post("/register").with(anonymous())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new CreateUserRequest("duplicate", "xxxxxx", "xxxxx@stagger.cz", "EN"))))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.message").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.content.username").value("UNIQUE"));
+
+        // Checking for not existing language
+        mockMvc.perform(MockMvcRequestBuilders.post("/register").with(anonymous())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new CreateUserRequest("notexistinglanguage", "notexistinglanguage", "notexistinglanguage@stagger.cz", "NOTEXISTING"))))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.message").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.content.language").value("VALUE_OF_ENUM"));
+
+        // Invalid e-mail format
+        mockMvc.perform(MockMvcRequestBuilders.post("/register").with(anonymous())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new CreateUserRequest("invalidemail", "invalidemail", "invalidemail", "EN"))))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.message").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.content.email").value("EMAIL"));
     }
 }

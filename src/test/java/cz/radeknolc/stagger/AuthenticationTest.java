@@ -12,6 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc
@@ -54,36 +55,37 @@ public class AuthenticationTest {
     @Test
     public void testAuthenticationError() throws Exception {
         // Not existing username & password
-        mockMvc.perform(MockMvcRequestBuilders.post("/authenticate")
+        mockMvc.perform(MockMvcRequestBuilders.post("/authenticate").with(anonymous())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new LoginRequest("test", "123"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.content").value("BAD_CREDENTIALS"));
+                .andExpect(jsonPath("$.message").value("BAD_CREDENTIALS"));
 
         // Blank fields
-        mockMvc.perform(MockMvcRequestBuilders.post("/authenticate")
+        mockMvc.perform(MockMvcRequestBuilders.post("/authenticate").with(anonymous())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new LoginRequest("", ""))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("VALIDATION_ERROR"))
                 .andExpect(jsonPath("$.content.username").value("NOT_BLANK"))
                 .andExpect(jsonPath("$.content.password").value("NOT_BLANK"));
 
         // Wrong password
-        mockMvc.perform(MockMvcRequestBuilders.post("/authenticate")
+        mockMvc.perform(MockMvcRequestBuilders.post("/authenticate").with(anonymous())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new LoginRequest("admin", "wrongpassword"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.content").value("BAD_CREDENTIALS"));
+                .andExpect(jsonPath("$.message").value("BAD_CREDENTIALS"));
 
         // Disabled account
-        mockMvc.perform(MockMvcRequestBuilders.post("/authenticate")
+        mockMvc.perform(MockMvcRequestBuilders.post("/authenticate").with(anonymous())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new LoginRequest("inactive", "inactive"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.content").value("ACCOUNT_DISABLED"));
+                .andExpect(jsonPath("$.message").value("ACCOUNT_DISABLED"));
     }
 }
