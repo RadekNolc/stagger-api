@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         @Sql(scripts = "/schema.sql"),
         @Sql(scripts = "/data.sql")
 })
-public class UserTest {
+public class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -46,7 +46,7 @@ public class UserTest {
     public void testUserRegistrationSuccess() throws Exception {
         int originalUsers = userRepository.findAll().size();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/register").with(anonymous())
+        mockMvc.perform(MockMvcRequestBuilders.post("/user/register").with(anonymous())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new CreateUserRequest("register", "register", "register@stagger.cz"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -65,13 +65,13 @@ public class UserTest {
     @Test
     public void testUserRegistrationError() throws Exception {
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/register").with(anonymous())
+        mockMvc.perform(MockMvcRequestBuilders.post("/user/register").with(anonymous())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new CreateUserRequest("duplicate", "duplicate", "duplicate@stagger.cz"))))
                 .andReturn();
 
         // Checking for duplicate username
-        mockMvc.perform(MockMvcRequestBuilders.post("/register").with(anonymous())
+        mockMvc.perform(MockMvcRequestBuilders.post("/user/register").with(anonymous())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new CreateUserRequest("duplicate", "xxxxxx", "xxxxx@stagger.cz"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -80,7 +80,7 @@ public class UserTest {
                 .andExpect(jsonPath("$.content.username").value("UNIQUE"));
 
         // Invalid e-mail format
-        mockMvc.perform(MockMvcRequestBuilders.post("/register").with(anonymous())
+        mockMvc.perform(MockMvcRequestBuilders.post("/user/register").with(anonymous())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CreateUserRequest("invalidemail", "invalidemail", "invalidemail"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))

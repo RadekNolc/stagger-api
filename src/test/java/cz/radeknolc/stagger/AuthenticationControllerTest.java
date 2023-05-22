@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Sql(scripts = "/data.sql")
 @Transactional
-public class AuthenticationTest {
+public class AuthenticationControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -30,7 +30,7 @@ public class AuthenticationTest {
     @Test
     public void testAuthenticationSuccess() throws Exception {
         // Administrator authentication
-        mockMvc.perform(MockMvcRequestBuilders.post("/authenticate")
+        mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new LoginRequest("admin", "admin"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -40,7 +40,7 @@ public class AuthenticationTest {
                 .andExpect(jsonPath("$.roles").isArray());
 
         // User authentication
-        mockMvc.perform(MockMvcRequestBuilders.post("/authenticate")
+        mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new LoginRequest("user", "user"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -53,7 +53,7 @@ public class AuthenticationTest {
     @Test
     public void testAuthenticationError() throws Exception {
         // Not existing username & password
-        mockMvc.perform(MockMvcRequestBuilders.post("/authenticate").with(anonymous())
+        mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate").with(anonymous())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new LoginRequest("test", "123"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -61,7 +61,7 @@ public class AuthenticationTest {
                 .andExpect(jsonPath("$.message").value("BAD_CREDENTIALS"));
 
         // Blank fields
-        mockMvc.perform(MockMvcRequestBuilders.post("/authenticate").with(anonymous())
+        mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate").with(anonymous())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new LoginRequest("", ""))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -71,7 +71,7 @@ public class AuthenticationTest {
                 .andExpect(jsonPath("$.content.password").value("NOT_BLANK"));
 
         // Wrong password
-        mockMvc.perform(MockMvcRequestBuilders.post("/authenticate").with(anonymous())
+        mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate").with(anonymous())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new LoginRequest("admin", "wrongpassword"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -79,7 +79,7 @@ public class AuthenticationTest {
                 .andExpect(jsonPath("$.message").value("BAD_CREDENTIALS"));
 
         // Disabled account
-        mockMvc.perform(MockMvcRequestBuilders.post("/authenticate").with(anonymous())
+        mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate").with(anonymous())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new LoginRequest("inactive", "inactive"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
