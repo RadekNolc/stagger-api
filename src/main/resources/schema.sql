@@ -5,7 +5,6 @@ CREATE TABLE IF NOT EXISTS "user" (
     "password" VARCHAR(250) NOT NULL,
     "email_address" VARCHAR(50) NOT NULL,
     "phone_number" VARCHAR(20),
-    "language" ENUM('EN','CS') NOT NULL DEFAULT 'EN',
     "is_active" TINYINT DEFAULT 0,
     "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "created_by" VARCHAR(24) DEFAULT '',

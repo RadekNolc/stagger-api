@@ -1,8 +1,6 @@
 package cz.radeknolc.stagger.model.request;
 
 import cz.radeknolc.stagger.annotation.Unique;
-import cz.radeknolc.stagger.annotation.ValueOfEnum;
-import cz.radeknolc.stagger.model.TextLanguage;
 import cz.radeknolc.stagger.model.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -25,6 +23,4 @@ public class CreateUserRequest {
     @NotBlank(message = "NOT_BLANK")
     @Email(message = "EMAIL")
     private String email;
-    @ValueOfEnum(enumClass = TextLanguage.class, message = "VALUE_OF_ENUM")
-    private String language;
 }

@@ -35,6 +35,6 @@ public class AuthenticationController {
         String token = authenticationUtils.generateToken(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        return ResponseEntity.ok(new TokenResponse(token, userDetails.getUsername(), userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()), userDetails.getLanguage()));
+        return ResponseEntity.ok(new TokenResponse(token, userDetails.getUsername(), userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList())));
     }
 }

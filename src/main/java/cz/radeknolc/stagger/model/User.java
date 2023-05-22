@@ -25,8 +25,6 @@ public class User extends BaseEntity {
     private String password;
     private String emailAddress;
     private String phoneNumber;
-    @Enumerated(EnumType.STRING)
-    private TextLanguage language;
     private Boolean isActive;
     @OneToMany(targetEntity = UserRole.class, fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.PERSIST)
     @JsonIgnore

@@ -36,7 +36,6 @@ public class AuthenticationTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value("admin"))
-                .andExpect(jsonPath("$.language").isNotEmpty())
                 .andExpect(jsonPath("$.token").isNotEmpty())
                 .andExpect(jsonPath("$.roles").isArray());
 
@@ -47,7 +46,6 @@ public class AuthenticationTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value("user"))
-                .andExpect(jsonPath("$.language").isNotEmpty())
                 .andExpect(jsonPath("$.token").isNotEmpty())
                 .andExpect(jsonPath("$.roles").isArray());
     }

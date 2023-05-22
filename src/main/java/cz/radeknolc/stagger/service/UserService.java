@@ -37,7 +37,6 @@ public class UserService {
         user.setUsername(createUserRequest.getUsername());
         user.setPassword(passwordEncoder.encode(createUserRequest.getPassword()));
         user.setEmailAddress(createUserRequest.getEmail());
-        user.setLanguage(TextLanguage.valueOf(createUserRequest.getLanguage()));
         user.setRoles(roles);
         user.setIsActive(true);
         user = userRepository.save(user);
