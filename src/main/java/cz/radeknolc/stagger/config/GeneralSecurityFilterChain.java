@@ -22,8 +22,8 @@ public abstract class GeneralSecurityFilterChain {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         httpSecurity.authorizeHttpRequests(request -> request
-                .requestMatchers("/authenticate").permitAll()
-                .requestMatchers("/register").permitAll()
+                .requestMatchers("/authentication/authenticate").permitAll()
+                .requestMatchers("/user/register").permitAll()
                 .anyRequest().authenticated()
         );
 
