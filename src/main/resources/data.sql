@@ -45,4 +45,4 @@ VALUES (2, 2, 'DANGER', 'BELL', 'DANGER_MESSAGE', 0, '2023-05-18 10:13:47', 'sys
 INSERT INTO "notification" ("id", "user_id", "type", "icon", "message", "is_read", "created_at", "created_by", "updated_at", "updated_by")
 VALUES (3, 1, 'PRIMARY', 'ACTIVITY', 'SUCCESS_MESSAGE', 0, '2023-05-19 10:13:47', 'system', NULL, NULL);
 INSERT INTO "notification" ("id", "user_id", "type", "icon", "message", "is_read", "created_at", "created_by", "updated_at", "updated_by")
-VALUES (4, 2, 'PRIMARY', 'ACTIVITY', 'SUCCESS_MESSAGE', 0, '2023-05-22 15:10:17', 'system', NULL, NULL);
+VALUES (4, 2, 'PRIMARY', 'ACTIVITY', 'SUCCESS_MESSAGE', 1, '2023-05-22 15:10:17', 'system', NULL, NULL);

@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.security.core.Transient;
 
 @Getter
 @Setter
@@ -15,20 +14,6 @@ import org.springframework.security.core.Transient;
 @Entity
 @Table(name = "notification")
 public class Notification extends BaseEntity {
-
-    @Transient
-    enum NotificationType {
-        PRIMARY,
-        SECONDARY,
-        SUCCESS,
-        DANGER,
-    }
-
-    @Transient
-    enum NotificationIcon {
-        BELL,
-        ACTIVITY,
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,4 +28,8 @@ public class Notification extends BaseEntity {
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     @JsonIgnore
     private User user;
+
+    public Notification(NotificationType type, NotificationIcon icon, String message) {
+        this(null, type, icon, message, false, null);
+    }
 }
