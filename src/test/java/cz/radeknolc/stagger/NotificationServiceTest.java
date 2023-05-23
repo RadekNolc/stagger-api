@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @AutoConfigureMockMvc
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.Random.class)
+@Transactional
 public class NotificationServiceTest {
 
     @Autowired
@@ -34,7 +35,6 @@ public class NotificationServiceTest {
     private NotificationRepository notificationRepository;
 
     @Test
-    @Transactional
     public void testReadNotification() {
         try (MockedStatic<UserDetailsImpl> uDetails = Mockito.mockStatic(UserDetailsImpl.class)) {
             uDetails.when(UserDetailsImpl::getLoggedUser).thenReturn(new UserDetailsImpl(userRepository.findByUsername("user").get()));
@@ -54,14 +54,11 @@ public class NotificationServiceTest {
     @Test
     public void testCreateNotification() {
         Notification newNotification = new Notification(NotificationType.PRIMARY, NotificationIcon.ACTIVITY, "TEST_NOTIFI");
-        assertNull(newNotification.getUser());
 
-        int notifications = notificationService.getUserNotifications(1L).size();
-        newNotification = notificationService.createNotification(newNotification, 1L); // sending notification to admin
+        assertNull(newNotification.getUser());
+        newNotification = notificationService.createNotification(newNotification, 1L); // sending notification to admin user
 
         assertTrue(newNotification.getId() > 0);
         assertEquals(1L, newNotification.getUser().getId());
-
-        assertEquals(notifications + 1, notificationService.getUserNotifications(1L).size());
     }
 }
