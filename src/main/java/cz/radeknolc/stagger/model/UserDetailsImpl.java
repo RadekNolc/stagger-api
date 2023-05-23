@@ -16,12 +16,12 @@
     private static final long serialVersionUID = -1657293349120079617L;
     private final User user;
 
-    public UserDetailsImpl(Long id, String username, String password, String email, String phoneNumber, boolean isActive, Set<UserRole> roles, Set<UserUniversity> universities) {
-        this.user = new User(id, username, password, email, phoneNumber, isActive, roles, universities);
+    public UserDetailsImpl(Long id, String username, String password, String email, String phoneNumber, boolean isActive, Set<UserRole> roles, Set<UserUniversity> universities, Set<Notification> notifications) {
+        this.user = new User(id, username, password, email, phoneNumber, isActive, roles, universities, notifications);
     }
 
     public UserDetailsImpl(User user) {
-        this(user.getId(), user.getUsername(), user.getPassword(), user.getEmailAddress(), user.getPhoneNumber(), user.getIsActive(), user.getRoles(), user.getUniversities());
+        this(user.getId(), user.getUsername(), user.getPassword(), user.getEmailAddress(), user.getPhoneNumber(), user.getIsActive(), user.getRoles(), user.getUniversities(), user.getNotifications());
     }
 
     public static UserDetailsImpl getLoggedUser() {
@@ -30,6 +30,10 @@
         }
 
         return null;
+    }
+
+    public Long getId() {
+        return user.getId();
     }
 
     @Override

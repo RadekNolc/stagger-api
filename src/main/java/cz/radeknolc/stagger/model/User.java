@@ -32,6 +32,10 @@ public class User extends BaseEntity {
     @OneToMany(targetEntity = UserUniversity.class, fetch = FetchType.EAGER, mappedBy = "user")
     @JsonIgnore
     private Set<UserUniversity> universities;
+    @OneToMany(targetEntity = Notification.class, fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OrderBy("createdAt DESC")
+    @JsonIgnore
+    private Set<Notification> notifications;
 
     @Override
     public boolean equals(Object o) {

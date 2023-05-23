@@ -55,3 +55,18 @@ CREATE TABLE IF NOT EXISTS "universities_users_map" (
      "university_id" BIGINT NOT NULL,
      PRIMARY KEY ("id")
 );
+
+DROP TABLE IF EXISTS "notification";
+CREATE TABLE IF NOT EXISTS "notification" (
+    "id" BIGINT NOT NULL AUTO_INCREMENT,
+    "user_id" BIGINT NOT NULL,
+    "type" ENUM('PRIMARY','SECONDARY','SUCCESS','DANGER') NOT NULL DEFAULT 'SUCCESS',
+    "icon" ENUM('BELL', 'ACTIVITY') NOT NULL DEFAULT 'BELL',
+    "message" VARCHAR(50) NOT NULL,
+    "is_read" TINYINT DEFAULT 0,
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "created_by" VARCHAR(24) DEFAULT '',
+    "updated_at" TIMESTAMP,
+    "updated_by" VARCHAR(24),
+    PRIMARY KEY ("id")
+);
