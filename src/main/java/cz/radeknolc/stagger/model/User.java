@@ -57,7 +57,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getRoles().stream().map(UserRole::getRole).collect(Collectors.toList());
+        return getRoles().stream().map(UserRole::getRole).collect(Collectors.toSet());
     }
 
     @Override
