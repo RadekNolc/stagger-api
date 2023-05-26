@@ -2,9 +2,9 @@ package cz.radeknolc.stagger.service;
 
 import cz.radeknolc.stagger.model.Notification;
 import cz.radeknolc.stagger.model.User;
-import cz.radeknolc.stagger.model.UserDetailsImpl;
 import cz.radeknolc.stagger.repository.NotificationRepository;
 import cz.radeknolc.stagger.repository.UserRepository;
+import cz.radeknolc.stagger.util.AuthenticationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +30,7 @@ public class NotificationService {
         Optional<Notification> n = notificationRepository.findById(notificationId);
         if (n.isPresent()) {
             Notification notification = n.get();
-            UserDetailsImpl currentUser = UserDetailsImpl.getLoggedUser();
+            User currentUser = AuthenticationUtils.getLoggedUser();
             if (currentUser != null && currentUser.getId().equals(notification.getUser().getId())) {
                 notification.setIsRead(true);
                 notificationRepository.save(notification);

@@ -6,8 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serial;
+import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -15,7 +20,10 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "user")
-public class User extends BaseEntity {
+public class User extends BaseEntity implements UserDetails {
+
+    @Serial
+    private static final long serialVersionUID = 1430053388500676755L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +33,10 @@ public class User extends BaseEntity {
     private String password;
     private String emailAddress;
     private String phoneNumber;
-    private Boolean isActive;
+    private boolean isEnabled;
+    private boolean isExpired;
+    private boolean isLocked;
+    private boolean isCredentialsExpired;
     @OneToMany(targetEntity = UserRole.class, fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.PERSIST)
     @JsonIgnore
     private Set<UserRole> roles;
@@ -42,5 +53,25 @@ public class User extends BaseEntity {
         if (!(o instanceof User target)) return false;
         if (!getUsername().equals(target.getUsername())) return false;
         return getEmailAddress().equals(target.getEmailAddress());
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return getRoles().stream().map(UserRole::getRole).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return !isExpired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !isLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return !isCredentialsExpired;
     }
 }

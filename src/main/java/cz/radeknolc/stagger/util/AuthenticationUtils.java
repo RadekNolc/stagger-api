@@ -1,10 +1,13 @@
 package cz.radeknolc.stagger.util;
 
+import cz.radeknolc.stagger.model.User;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -64,6 +67,16 @@ public class AuthenticationUtils {
         if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer")) {
             return headerAuth.substring(7);
         }
+
+        return null;
+    }
+
+    public static User getLoggedUser() {
+        try {
+            if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
+                return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            }
+        } catch (NullPointerException ignored) {}
 
         return null;
     }

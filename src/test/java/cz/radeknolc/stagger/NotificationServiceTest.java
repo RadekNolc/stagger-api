@@ -3,10 +3,10 @@ package cz.radeknolc.stagger;
 import cz.radeknolc.stagger.model.Notification;
 import cz.radeknolc.stagger.model.NotificationIcon;
 import cz.radeknolc.stagger.model.NotificationType;
-import cz.radeknolc.stagger.model.UserDetailsImpl;
 import cz.radeknolc.stagger.repository.NotificationRepository;
 import cz.radeknolc.stagger.repository.UserRepository;
 import cz.radeknolc.stagger.service.NotificationService;
+import cz.radeknolc.stagger.util.AuthenticationUtils;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -36,13 +36,13 @@ public class NotificationServiceTest {
 
     @Test
     public void testReadNotification() {
-        try (MockedStatic<UserDetailsImpl> uDetails = Mockito.mockStatic(UserDetailsImpl.class)) {
-            uDetails.when(UserDetailsImpl::getLoggedUser).thenReturn(new UserDetailsImpl(userRepository.findByUsername("user").get()));
+        try (MockedStatic<AuthenticationUtils> uDetails = Mockito.mockStatic(AuthenticationUtils.class)) {
+            uDetails.when(AuthenticationUtils::getLoggedUser).thenReturn(userRepository.findByUsername("user").get());
 
             // Reading own notification
-            int notifications = notificationService.getUserNotifications(UserDetailsImpl.getLoggedUser().getId()).size();
+            int notifications = notificationService.getUserNotifications(AuthenticationUtils.getLoggedUser().getId()).size();
             assertTrue(notificationService.readNotification(2L));
-            assertEquals(notifications - 1, notificationService.getUserNotifications(UserDetailsImpl.getLoggedUser().getId()).size());
+            assertEquals(notifications - 1, notificationService.getUserNotifications(AuthenticationUtils.getLoggedUser().getId()).size());
 
             // Reading other's notification
             notifications = notificationService.getUserNotifications(1L).size();

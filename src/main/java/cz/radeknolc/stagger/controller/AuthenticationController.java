@@ -1,6 +1,5 @@
 package cz.radeknolc.stagger.controller;
 
-import cz.radeknolc.stagger.model.UserDetailsImpl;
 import cz.radeknolc.stagger.model.payload.TokenResponse;
 import cz.radeknolc.stagger.model.request.LoginRequest;
 import cz.radeknolc.stagger.util.AuthenticationUtils;
@@ -34,8 +33,7 @@ public class AuthenticationController {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = authenticationUtils.generateToken(authentication);
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        return ResponseEntity.ok(new TokenResponse(token, userDetails.getUsername(), userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList())));
+        return ResponseEntity.ok(new TokenResponse(token, AuthenticationUtils.getLoggedUser().getUsername(), AuthenticationUtils.getLoggedUser().getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList())));
     }
 }

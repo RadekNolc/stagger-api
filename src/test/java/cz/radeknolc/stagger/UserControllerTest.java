@@ -51,7 +51,7 @@ public class UserControllerTest {
 
         Optional<User> createdUser = userRepository.findByUsername("register");
         Assertions.assertTrue(createdUser.isPresent()); // Checking if user was created
-        Assertions.assertNotNull(createdUser.get().getIsActive()); // Checking if proper value was set
+        Assertions.assertTrue(createdUser.get().isEnabled()); // Checking if proper value was set
         Assertions.assertNotNull(createdUser.get().getCreatedAt()); // Checking if created at is not null and set
         Assertions.assertEquals(1, createdUser.get().getRoles().size()); // Checking if user got role
     }

@@ -1,6 +1,7 @@
 package cz.radeknolc.stagger.service;
 
-import cz.radeknolc.stagger.model.UserDetailsImpl;
+import cz.radeknolc.stagger.model.User;
+import cz.radeknolc.stagger.util.AuthenticationUtils;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;
 
@@ -11,10 +12,9 @@ public class AuditorAwareImpl implements AuditorAware<String> {
 
     @Override
     public Optional<String> getCurrentAuditor() {
-        if (UserDetailsImpl.getLoggedUser() != null) {
-            return Optional.ofNullable(UserDetailsImpl.getLoggedUser().getUsername());
-        }
-
-        return Optional.empty();
+        Optional<User> user = Optional.ofNullable(AuthenticationUtils.getLoggedUser());
+        return user.map(User::getUsername);
     }
+
+
 }

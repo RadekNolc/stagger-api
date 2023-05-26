@@ -1,6 +1,9 @@
 package cz.radeknolc.stagger.service;
 
-import cz.radeknolc.stagger.model.*;
+import cz.radeknolc.stagger.model.Role;
+import cz.radeknolc.stagger.model.RoleName;
+import cz.radeknolc.stagger.model.User;
+import cz.radeknolc.stagger.model.UserRole;
 import cz.radeknolc.stagger.model.request.CreateUserRequest;
 import cz.radeknolc.stagger.repository.RoleRepository;
 import cz.radeknolc.stagger.repository.UserRepository;
@@ -38,7 +41,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(createUserRequest.getPassword()));
         user.setEmailAddress(createUserRequest.getEmail());
         user.setRoles(roles);
-        user.setIsActive(true);
+        user.setEnabled(true);
         user = userRepository.save(user);
 
         if (user.getId() > 0)
