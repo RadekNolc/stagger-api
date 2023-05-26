@@ -3,8 +3,7 @@ package cz.radeknolc.stagger.controller;
 import cz.radeknolc.stagger.model.payload.ServerResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.*;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,6 +23,21 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<?> handleBadCredentialsException() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ServerResponse<>("BAD_CREDENTIALS"));
+    }
+
+    @ExceptionHandler(AccountExpiredException.class)
+    public ResponseEntity<?> handleAccountExpiredException() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ServerResponse<>("ACCOUNT_EXPIRED"));
+    }
+
+    @ExceptionHandler(LockedException.class)
+    public ResponseEntity<?> handleAccountLockedException() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ServerResponse<>("ACCOUNT_LOCKED"));
+    }
+
+    @ExceptionHandler(CredentialsExpiredException.class)
+    public ResponseEntity<?> handleCredentialExpiredException() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ServerResponse<>("CREDENTIALS_EXPIRED"));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
