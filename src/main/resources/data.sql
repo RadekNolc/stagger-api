@@ -5,6 +5,13 @@ INSERT INTO "user" ("id", "username", "password", "email_address", "phone_number
 VALUES (2, 'user', '$2a$12$kOXYV3zxUWFeJHXueBvXremslfkq.e9Zqfr5Jdm4vD12SfZ9nZDwS', 'user@stagger.cz', '123456789', 1, 0, 0, 0, '2023-04-16 00:13:47', 'dataSQL', NULL, NULL);
 INSERT INTO "user" ("id", "username", "password", "email_address", "phone_number", "is_enabled", "is_locked", "is_expired", "is_credentials_expired", "created_at", "created_by", "updated_at", "updated_by")
 VALUES (3, 'inactive', '$2a$12$j4Zm41Uy9VYNXisppiCWSOTGS9XAH0GCbF8nI/VlmUB5q1AxSo6HC', 'inactive@stagger.cz', '123456789', 0, 0, 0, 0, '2023-04-16 00:13:47', 'dataSQL', NULL, NULL);
+INSERT INTO "user" ("id", "username", "password", "email_address", "phone_number", "is_enabled", "is_locked", "is_expired", "is_credentials_expired", "created_at", "created_by", "updated_at", "updated_by")
+VALUES (4, 'expired', '$2a$12$uM/b20/ftv/XWvMkR6XpMuyhgHUqg0ZJT.ncXklTExJLWvIiWW6BW', 'expired@stagger.cz', '123456789', 1, 0, 1, 0, '2023-04-16 00:13:47', 'dataSQL', NULL, NULL);
+INSERT INTO "user" ("id", "username", "password", "email_address", "phone_number", "is_enabled", "is_locked", "is_expired", "is_credentials_expired", "created_at", "created_by", "updated_at", "updated_by")
+VALUES (5, 'locked', '$2a$12$GyZ.Ej565R8Bv21TvJml2.o4SFp6c2FuHktaI4seXUUIEjstQv5PS', 'locked@stagger.cz', '123456789', 1, 1, 0, 0, '2023-04-16 00:13:47', 'dataSQL', NULL, NULL);
+INSERT INTO "user" ("id", "username", "password", "email_address", "phone_number", "is_enabled", "is_locked", "is_expired", "is_credentials_expired", "created_at", "created_by", "updated_at", "updated_by")
+VALUES (6, 'credentials_expired', '$2a$12$4ofwKDUTp9OcDvWLo2tsEekFTh9ZBW28okaPhdpJ29fgnulb8fgQW', 'credentials_expired@stagger.cz', '123456789', 1, 0, 0, 1, '2023-04-16 00:13:47', 'dataSQL', NULL, NULL);
+
 
 /* ROLE TABLE */
 INSERT INTO "role" ("id", "name")

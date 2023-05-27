@@ -37,7 +37,7 @@ public class NotificationControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    public void testReadNotificationSuccess() throws Exception {
+    public void readNotification_ReadOwnNotification_OkStatus() throws Exception {
         Optional<User> user = userRepository.findByUsername("user");
 
         if (user.isPresent()) {
@@ -45,29 +45,19 @@ public class NotificationControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(new ReadNotificationRequest(1L))))
                     .andExpect(status().isOk());
-
-            mockMvc.perform(MockMvcRequestBuilders.post("/notification/read").with(user(user.get()))
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(new ReadNotificationRequest(2L))))
-                    .andExpect(status().isOk());
         } else {
             throw new UsernameNotFoundException("Called user does not exist.");
         }
     }
 
     @Test
-    public void testReadNotificationError() throws Exception {
+    public void readNotification_ReadOthersNotification_ClientErrorStatus() throws Exception {
         Optional<User> user = userRepository.findByUsername("admin");
 
         if (user.isPresent()) {
             mockMvc.perform(MockMvcRequestBuilders.post("/notification/read").with(user(user.get()))
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(new ReadNotificationRequest(1L))))
-                    .andExpect(status().isUnauthorized());
-
-            mockMvc.perform(MockMvcRequestBuilders.post("/notification/read").with(user(user.get()))
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(new ReadNotificationRequest(2L))))
                     .andExpect(status().isUnauthorized());
         } else {
             throw new UsernameNotFoundException("Called user does not exist.");

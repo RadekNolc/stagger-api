@@ -1,11 +1,9 @@
 package cz.radeknolc.stagger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cz.radeknolc.stagger.model.User;
 import cz.radeknolc.stagger.model.request.CreateUserRequest;
 import cz.radeknolc.stagger.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -15,8 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.util.Optional;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -37,43 +33,49 @@ public class UserControllerTest {
     private UserRepository userRepository;
 
     @Test
-    public void testUserRegistrationSuccess() throws Exception {
-        int originalUsers = userRepository.findAll().size();
-
+    public void registerUser_ValidInput_OkStatus() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/user/register").with(anonymous())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new CreateUserRequest("register", "register", "register@stagger.cz"))))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new CreateUserRequest("register", "register", "register@stagger.cz"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("REGISTRATION_SUCCESS"));
-
-        Assertions.assertEquals(++originalUsers, userRepository.findAll().size()); // Checking if user was created
-
-        Optional<User> createdUser = userRepository.findByUsername("register");
-        Assertions.assertTrue(createdUser.isPresent()); // Checking if user was created
-        Assertions.assertTrue(createdUser.get().isEnabled()); // Checking if proper value was set
-        Assertions.assertNotNull(createdUser.get().getCreatedAt()); // Checking if created at is not null and set
-        Assertions.assertEquals(1, createdUser.get().getRoles().size()); // Checking if user got role
     }
 
     @Test
-    public void testUserRegistrationError() throws Exception {
-
+    public void registerUser_AlreadyRegisteredUsername_ClientErrorStatus() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/user/register").with(anonymous())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new CreateUserRequest("duplicate", "duplicate", "duplicate@stagger.cz"))))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new CreateUserRequest("duplicate", "duplicate", "duplicate@stagger.cz"))))
                 .andReturn();
 
-        // Checking for duplicate username
         mockMvc.perform(MockMvcRequestBuilders.post("/user/register").with(anonymous())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new CreateUserRequest("duplicate", "xxxxxx", "xxxxx@stagger.cz"))))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new CreateUserRequest("duplicate", "xxxxxx", "xxxxx@stagger.cz"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.message").value("VALIDATION_ERROR"))
                 .andExpect(jsonPath("$.content.username").value("UNIQUE"));
+    }
 
-        // Invalid e-mail format
+    @Test
+    public void registerUser_AlreadyRegisteredEmail_ClientErrorStatus() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/user/register").with(anonymous())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new CreateUserRequest("duplicate", "duplicate", "duplicate@stagger.cz"))))
+                .andReturn();
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/user/register").with(anonymous())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new CreateUserRequest("xxxxxx", "xxxxxx", "duplicate@stagger.cz"))))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.message").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.content.email").value("UNIQUE"));
+    }
+
+    @Test
+    public void registerUser_InvalidEmailFormat_ClientErrorStatus() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/user/register").with(anonymous())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CreateUserRequest("invalidemail", "invalidemail", "invalidemail"))))

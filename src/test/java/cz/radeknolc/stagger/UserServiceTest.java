@@ -2,6 +2,7 @@ package cz.radeknolc.stagger;
 
 import cz.radeknolc.stagger.model.User;
 import cz.radeknolc.stagger.model.request.CreateUserRequest;
+import cz.radeknolc.stagger.repository.UserRepository;
 import cz.radeknolc.stagger.service.UserService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.MethodOrderer;
@@ -22,13 +23,18 @@ public class UserServiceTest {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Test
-    public void testRegisterUser() {
+    public void registerUser_ValidUserCreation_User() {
+        final int originalUsersCount = userRepository.findAll().size();
         CreateUserRequest request = new CreateUserRequest("user01", "user01", "user01@stagger.cz");
         User user = userService.registerUser(request);
 
         assertTrue(user.getId() > 0);
         assertNotEquals("user01", user.getPassword());
         assertEquals(1, user.getRoles().size());
+        assertEquals(originalUsersCount + 1, userRepository.findAll().size());
     }
 }
