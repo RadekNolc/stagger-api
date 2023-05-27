@@ -22,5 +22,6 @@ public class CreateUserRequest {
     private String password;
     @NotBlank(message = "NOT_BLANK")
     @Email(message = "EMAIL")
+    @Unique(entityClass = User.class, targetColumn = "email_address", message = "UNIQUE")
     private String email;
 }
