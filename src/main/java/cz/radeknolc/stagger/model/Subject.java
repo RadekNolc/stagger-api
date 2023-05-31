@@ -13,11 +13,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "subject")
-public class Subject {
+public class Subject extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
     private String department;
     private String name;
     @ManyToOne(targetEntity = University.class, cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, optional = false)

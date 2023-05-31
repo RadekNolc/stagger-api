@@ -13,11 +13,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "notification")
-public class Notification extends BaseEntity {
+public class Notification extends AuditedEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
     @Enumerated(value = EnumType.STRING)
     private NotificationType type;
     @Enumerated(value = EnumType.STRING)
@@ -30,6 +27,6 @@ public class Notification extends BaseEntity {
     private User user;
 
     public Notification(NotificationType type, NotificationIcon icon, String message) {
-        this(0, type, icon, message, false, null);
+        this(type, icon, message, false, null);
     }
 }

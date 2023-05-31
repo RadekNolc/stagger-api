@@ -7,12 +7,8 @@ import lombok.Getter;
 @Getter
 @Entity
 @Table(name = "universities_users_map")
-public class UserUniversity {
+public class UserUniversity extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private long mapId;
     @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     @JsonIgnore

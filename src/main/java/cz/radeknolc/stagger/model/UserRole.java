@@ -11,12 +11,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "roles_users_map")
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRole {
+public class UserRole extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private long mapId;
     @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     @JsonIgnore
@@ -25,8 +21,4 @@ public class UserRole {
     @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
     @JsonIgnore
     private Role role;
-
-    public UserRole(User user, Role role) {
-        this(0, user, role);
-    }
 }

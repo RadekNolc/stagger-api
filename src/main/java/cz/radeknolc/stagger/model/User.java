@@ -20,14 +20,11 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Entity
 @Table(name = "user")
-public class User extends BaseEntity implements UserDetails {
+public class User extends AuditedEntity implements UserDetails {
 
     @Serial
     private static final long serialVersionUID = 1430053388500676755L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
     private String username;
     @JsonIgnore
     private String password;

@@ -17,14 +17,11 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "role")
-public class Role implements GrantedAuthority {
+public class Role extends BaseEntity implements GrantedAuthority {
 
     @Serial
     private static final long serialVersionUID = 3929235466956026347L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
     @Enumerated(EnumType.STRING)
     private RoleName name;
     @OneToMany(mappedBy = "role")

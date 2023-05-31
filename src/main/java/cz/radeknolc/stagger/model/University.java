@@ -15,11 +15,8 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "university")
-public class University extends BaseEntity {
+public class University extends AuditedEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
     private String name;
     @OneToMany(targetEntity = Subject.class, cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "university")
     @JsonIgnore
