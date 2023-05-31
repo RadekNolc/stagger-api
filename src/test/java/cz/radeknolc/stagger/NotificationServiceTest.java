@@ -74,7 +74,7 @@ public class NotificationServiceTest {
         assertEquals(NotificationType.PRIMARY, newNotification.getType());
         assertEquals(NotificationIcon.ACTIVITY, newNotification.getIcon());
         assertNotNull(newNotification.getMessage());
-        assertFalse(newNotification.getIsRead());
+        assertFalse(newNotification.isRead());
     }
 
     @Test

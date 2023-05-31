@@ -17,19 +17,19 @@ public class Notification extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
     @Enumerated(value = EnumType.STRING)
     private NotificationType type;
     @Enumerated(value = EnumType.STRING)
     private NotificationIcon icon;
     private String message;
-    private Boolean isRead;
+    private boolean isRead;
     @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     @JsonIgnore
     private User user;
 
     public Notification(NotificationType type, NotificationIcon icon, String message) {
-        this(null, type, icon, message, false, null);
+        this(0, type, icon, message, false, null);
     }
 }

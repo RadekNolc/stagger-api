@@ -17,7 +17,7 @@ public class Subject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
     private String department;
     private String name;
     @ManyToOne(targetEntity = University.class, cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, optional = false)

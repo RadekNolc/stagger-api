@@ -16,7 +16,7 @@ public class UserRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long mapId;
+    private long mapId;
     @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     @JsonIgnore
@@ -27,6 +27,6 @@ public class UserRole {
     private Role role;
 
     public UserRole(User user, Role role) {
-        this(null, user, role);
+        this(0, user, role);
     }
 }

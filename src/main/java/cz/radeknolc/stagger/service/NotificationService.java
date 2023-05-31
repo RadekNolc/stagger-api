@@ -21,18 +21,18 @@ public class NotificationService {
     @Autowired
     private NotificationRepository notificationRepository;
 
-    public List<Notification> getUserNotifications(Long userId) {
+    public List<Notification> getUserNotifications(long userId) {
         Optional<User> user = userRepository.findById(userId);
-        return user.map(value -> new ArrayList<>(value.getNotifications().stream().filter(Notification -> !Notification.getIsRead()).toList())).orElseGet(ArrayList::new);
+        return user.map(value -> new ArrayList<>(value.getNotifications().stream().filter(Notification -> !Notification.isRead()).toList())).orElseGet(ArrayList::new);
     }
 
-    public boolean readNotification(Long notificationId) {
+    public boolean readNotification(long notificationId) {
         Optional<Notification> n = notificationRepository.findById(notificationId);
         if (n.isPresent()) {
             Notification notification = n.get();
             User currentUser = AuthenticationUtils.getLoggedUser();
-            if (currentUser != null && currentUser.getId().equals(notification.getUser().getId())) {
-                notification.setIsRead(true);
+            if (currentUser != null && currentUser.getId() == notification.getUser().getId()) {
+                notification.setRead(true);
                 notificationRepository.save(notification);
                 return true;
             }
@@ -41,7 +41,7 @@ public class NotificationService {
         return false;
     }
 
-    public Notification createNotification(Notification notification, Long receiverId) {
+    public Notification createNotification(Notification notification, long receiverId) {
         Optional<User> receiver = userRepository.findById(receiverId);
         if (receiver.isPresent()) {
             notification.setUser(receiver.get());

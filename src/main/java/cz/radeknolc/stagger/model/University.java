@@ -19,7 +19,7 @@ public class University extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
     private String name;
     @OneToMany(targetEntity = Subject.class, cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "university")
     @JsonIgnore
