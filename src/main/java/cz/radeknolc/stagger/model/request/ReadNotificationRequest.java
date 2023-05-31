@@ -1,6 +1,7 @@
 package cz.radeknolc.stagger.model.request;
 
-import jakarta.validation.constraints.NotNull;
+import cz.radeknolc.stagger.annotation.Exists;
+import cz.radeknolc.stagger.model.Notification;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ReadNotificationRequest {
 
-    @NotNull(message = "NOT_NULL")
-    private Long notificationId;
+    @Exists(entityClass = Notification.class, targetColumn = "id", message = "NOT_EXISTS")
+    private long notificationId;
 }

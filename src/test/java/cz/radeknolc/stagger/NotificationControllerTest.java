@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.Optional;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
@@ -59,6 +60,37 @@ public class NotificationControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(new ReadNotificationRequest(1L))))
                     .andExpect(status().isUnauthorized());
+        } else {
+            throw new UsernameNotFoundException("Called user does not exist.");
+        }
+    }
+
+    @Test
+    public void readNotification_EmptyNotificationId_ClientErrorStatus() throws Exception {
+        Optional<User> user = userRepository.findByUsername("user");
+
+        if (user.isPresent()) {
+            mockMvc.perform(MockMvcRequestBuilders.post("/notification/read").with(user(user.get()))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(new ReadNotificationRequest())))
+                    .andExpect(status().is4xxClientError())
+                    .andExpect(jsonPath("$.message").value("VALIDATION_ERROR"))
+                    .andExpect(jsonPath("$.content.notificationId").value("NOT_EXISTS"));
+        } else {
+            throw new UsernameNotFoundException("Called user does not exist.");
+        }
+    }
+
+    @Test
+    public void readNotification_NotExistingNotification_ClientErrorStatus() throws Exception {
+        Optional<User> user = userRepository.findByUsername("user");
+        if (user.isPresent()) {
+            mockMvc.perform(MockMvcRequestBuilders.post("/notification/read").with(user(user.get()))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(new ReadNotificationRequest(10000))))
+                    .andExpect(status().is4xxClientError())
+                    .andExpect(jsonPath("$.message").value("VALIDATION_ERROR"))
+                    .andExpect(jsonPath("$.content.notificationId").value("NOT_EXISTS"));
         } else {
             throw new UsernameNotFoundException("Called user does not exist.");
         }
