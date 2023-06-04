@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
 import java.util.Set;
 
 @Getter
@@ -24,4 +25,16 @@ public class University extends AuditedEntity {
     @OneToMany(mappedBy = "university")
     @JsonIgnore
     private Set<UserUniversity> users;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof University target)) return false;
+        return Objects.equals(name, target.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
 }

@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serial;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,10 +35,10 @@ public class User extends AuditedEntity implements UserDetails {
     private boolean isExpired;
     private boolean isLocked;
     private boolean isCredentialsExpired;
-    @OneToMany(targetEntity = UserRole.class, fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.PERSIST)
+    @OneToMany(targetEntity = UserRole.class, fetch = FetchType.EAGER, mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JsonIgnore
     private Set<UserRole> roles;
-    @OneToMany(targetEntity = UserUniversity.class, fetch = FetchType.EAGER, mappedBy = "user")
+    @OneToMany(targetEntity = UserUniversity.class, fetch = FetchType.EAGER, mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JsonIgnore
     private Set<UserUniversity> universities;
     @OneToMany(targetEntity = Notification.class, fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.REMOVE)
@@ -47,9 +48,14 @@ public class User extends AuditedEntity implements UserDetails {
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (!(o instanceof User target)) return false;
-        if (!getUsername().equals(target.getUsername())) return false;
-        return getEmailAddress().equals(target.getEmailAddress());
+        return Objects.equals(username, target.username) && Objects.equals(emailAddress, target.emailAddress) && Objects.equals(phoneNumber, target.phoneNumber);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, emailAddress, phoneNumber);
     }
 
     @Override

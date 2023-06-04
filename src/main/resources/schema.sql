@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS "university" (
     "id" BIGINT NOT NULL AUTO_INCREMENT,
     "name" VARCHAR(50) NOT NULL DEFAULT '',
     "created_at" TIMESTAMP NOT NULL,
-    "created_by" VARCHAR(24) NOT NULL DEFAULT '',
+    "created_by" VARCHAR(24) DEFAULT '',
     "updated_at" TIMESTAMP,
     "updated_by" VARCHAR(24),
     PRIMARY KEY ("id")
