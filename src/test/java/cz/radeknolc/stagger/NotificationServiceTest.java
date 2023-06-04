@@ -8,6 +8,7 @@ import cz.radeknolc.stagger.repository.UserRepository;
 import cz.radeknolc.stagger.service.NotificationService;
 import cz.radeknolc.stagger.util.AuthenticationUtils;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -16,9 +17,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -34,33 +32,29 @@ public class NotificationServiceTest {
     @Autowired
     private NotificationService notificationService;
 
+    private User normalUser, adminUser;
+
+    @BeforeEach
+    public void beforeEach() {
+        normalUser = userRepository.findByUsername("user").get();
+        adminUser = userRepository.findByUsername("admin").get();
+    }
+
     @Test
     public void readNotification_ReadOwnNotification_True() {
-        Optional<User> user = userRepository.findByUsername("user");
+        try (MockedStatic<AuthenticationUtils> authenticationUtils = Mockito.mockStatic(AuthenticationUtils.class)) {
+            authenticationUtils.when(AuthenticationUtils::getLoggedUser).thenReturn(normalUser);
 
-        if (user.isPresent()) {
-            try (MockedStatic<AuthenticationUtils> authenticationUtils = Mockito.mockStatic(AuthenticationUtils.class)) {
-                authenticationUtils.when(AuthenticationUtils::getLoggedUser).thenReturn(user.get());
-
-                assertTrue(notificationService.readNotification(2L));
-            }
-        } else {
-            throw new UsernameNotFoundException("Called user does not exist.");
+            assertTrue(notificationService.readNotification(2));
         }
     }
 
     @Test
     public void readNotification_ReadOthersNotification_False() {
-        Optional<User> user = userRepository.findByUsername("admin");
+        try (MockedStatic<AuthenticationUtils> authenticationUtils = Mockito.mockStatic(AuthenticationUtils.class)) {
+            authenticationUtils.when(AuthenticationUtils::getLoggedUser).thenReturn(adminUser);
 
-        if (user.isPresent()) {
-            try (MockedStatic<AuthenticationUtils> authenticationUtils = Mockito.mockStatic(AuthenticationUtils.class)) {
-                authenticationUtils.when(AuthenticationUtils::getLoggedUser).thenReturn(user.get());
-
-                assertFalse(notificationService.readNotification(2L));
-            }
-        } else {
-            throw new UsernameNotFoundException("Called user does not exist.");
+            assertFalse(notificationService.readNotification(2));
         }
     }
 
@@ -68,7 +62,7 @@ public class NotificationServiceTest {
     public void createNotification_ValidInput_Notification() {
         Notification newNotification = new Notification(NotificationType.PRIMARY, NotificationIcon.ACTIVITY, "TEST_NOTIFICATION");
 
-        newNotification = notificationService.createNotification(newNotification, 1L);
+        newNotification = notificationService.createNotification(newNotification, 1);
         assertNotNull(newNotification);
         assertTrue(newNotification.getId() > 0);
         assertEquals(NotificationType.PRIMARY, newNotification.getType());
@@ -81,7 +75,7 @@ public class NotificationServiceTest {
     public void createNotification_NotExistingReceiver_Null() {
         Notification newNotification = new Notification(NotificationType.PRIMARY, NotificationIcon.ACTIVITY, "TEST_NOTIFICATION");
 
-        newNotification = notificationService.createNotification(newNotification, 1000000L);
+        newNotification = notificationService.createNotification(newNotification, 0);
         assertNull(newNotification);
     }
 }

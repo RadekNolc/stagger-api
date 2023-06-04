@@ -5,6 +5,7 @@ import cz.radeknolc.stagger.model.User;
 import cz.radeknolc.stagger.model.request.ReadNotificationRequest;
 import cz.radeknolc.stagger.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -12,11 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.util.Optional;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -37,62 +35,47 @@ public class NotificationControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Test
-    public void readNotification_ReadOwnNotification_OkStatus() throws Exception {
-        Optional<User> user = userRepository.findByUsername("user");
+    private User normalUser, adminUser;
 
-        if (user.isPresent()) {
-            mockMvc.perform(MockMvcRequestBuilders.post("/notification/read").with(user(user.get()))
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(new ReadNotificationRequest(1L))))
-                    .andExpect(status().isOk());
-        } else {
-            throw new UsernameNotFoundException("Called user does not exist.");
-        }
+    @BeforeEach
+    public void beforeEach() {
+        normalUser = userRepository.findByUsername("user").get();
+        adminUser = userRepository.findByUsername("admin").get();
     }
 
     @Test
-    public void readNotification_ReadOthersNotification_ClientErrorStatus() throws Exception {
-        Optional<User> user = userRepository.findByUsername("admin");
+    public void readNotification_ReadOwnNotification_OkStatus() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/notification/read").with(user(normalUser))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new ReadNotificationRequest(1))))
+                .andExpect(status().isOk());
+    }
 
-        if (user.isPresent()) {
-            mockMvc.perform(MockMvcRequestBuilders.post("/notification/read").with(user(user.get()))
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(new ReadNotificationRequest(1L))))
-                    .andExpect(status().isUnauthorized());
-        } else {
-            throw new UsernameNotFoundException("Called user does not exist.");
-        }
+    @Test
+    public void readNotification_ReadOthersNotification_UnauthorizedStatus() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/notification/read").with(user(adminUser))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new ReadNotificationRequest(1))))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
     public void readNotification_EmptyNotificationId_ClientErrorStatusWithMessageAndValidationErrors() throws Exception {
-        Optional<User> user = userRepository.findByUsername("user");
-
-        if (user.isPresent()) {
-            mockMvc.perform(MockMvcRequestBuilders.post("/notification/read").with(user(user.get()))
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(new ReadNotificationRequest())))
-                    .andExpect(status().is4xxClientError())
-                    .andExpect(jsonPath("$.message").value("VALIDATION_ERROR"))
-                    .andExpect(jsonPath("$.content.notificationId").value("NOT_EXISTS"));
-        } else {
-            throw new UsernameNotFoundException("Called user does not exist.");
-        }
+        mockMvc.perform(MockMvcRequestBuilders.post("/notification/read").with(user(normalUser))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new ReadNotificationRequest())))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.message").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.content.notificationId").value("NOT_EXISTS"));
     }
 
     @Test
     public void readNotification_NotExistingNotification_ClientErrorStatusWithMessageAndValidationErrors() throws Exception {
-        Optional<User> user = userRepository.findByUsername("user");
-        if (user.isPresent()) {
-            mockMvc.perform(MockMvcRequestBuilders.post("/notification/read").with(user(user.get()))
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(new ReadNotificationRequest(0))))
-                    .andExpect(status().is4xxClientError())
-                    .andExpect(jsonPath("$.message").value("VALIDATION_ERROR"))
-                    .andExpect(jsonPath("$.content.notificationId").value("NOT_EXISTS"));
-        } else {
-            throw new UsernameNotFoundException("Called user does not exist.");
-        }
+        mockMvc.perform(MockMvcRequestBuilders.post("/notification/read").with(user(normalUser))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new ReadNotificationRequest(0))))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.message").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.content.notificationId").value("NOT_EXISTS"));
     }
 }
