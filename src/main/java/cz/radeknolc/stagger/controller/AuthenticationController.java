@@ -29,7 +29,7 @@ public class AuthenticationController {
     private AuthenticationUtils authenticationUtils;
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-    public ResponseEntity<?> authenticate(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<TokenResponse> authenticate(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = authenticationUtils.generateToken(authentication);

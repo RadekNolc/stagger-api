@@ -9,10 +9,13 @@ import cz.radeknolc.stagger.service.UniversityService;
 import cz.radeknolc.stagger.util.AuthenticationUtils;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static cz.radeknolc.stagger.model.payload.ServerResponseMessage.*;
 
 @RestController
 @RequestMapping(path = "university")
@@ -23,38 +26,38 @@ public class UniversityController {
 
     @GetMapping(value = "/all")
     public ResponseEntity<ServerResponse<List<University>>> allUniversities() {
-        return ResponseEntity.ok().body(new ServerResponse<>(universityService.getAllUniversities()));
+        return ResponseEntity.ok(new ServerResponse<>(universityService.getAllUniversities()));
     }
 
     @PostMapping(value = "/create")
     public ResponseEntity<ServerResponse<University>> createUniversity(@Valid @RequestBody CreateUniversityRequest createUniversityRequest) {
         University newUniversity = universityService.createUniversity(createUniversityRequest);
-        return ResponseEntity.ok().body(new ServerResponse<>("UNIVERSITY_CREATED", newUniversity));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ServerResponse<>(UNIVERSITY_CREATED, newUniversity));
     }
 
     @GetMapping(value = "/user")
     public ResponseEntity<ServerResponse<List<University>>> userUniversities() {
         List<University> userUniversities = universityService.getUserUniversities(AuthenticationUtils.getLoggedUser().getId());
-        return ResponseEntity.ok().body(new ServerResponse<>(userUniversities));
+        return ResponseEntity.ok(new ServerResponse<>(userUniversities));
     }
 
     @PostMapping(value = "/assign")
-    public ResponseEntity<ServerResponse<Boolean>> userAssignUniversity(@Valid @RequestBody UserAssignUniversityRequest userAssignUniversityRequest) {
+    public ResponseEntity<ServerResponse<Void>> userAssignUniversity(@Valid @RequestBody UserAssignUniversityRequest userAssignUniversityRequest) {
         boolean userAssigned = universityService.assignUser(userAssignUniversityRequest.getUniversityId(), AuthenticationUtils.getLoggedUser().getId());
         if (userAssigned) {
-            return ResponseEntity.ok().body(new ServerResponse<>("UNIVERSITY_ASSIGNED", userAssigned));
+            return ResponseEntity.ok(new ServerResponse<>(UNIVERSITY_ASSIGNED));
         }
 
-        return ResponseEntity.badRequest().body(new ServerResponse<>("UNIVERSITY_NOT_ASSIGNED", userAssigned));
+        return ResponseEntity.badRequest().body(new ServerResponse<>(UNIVERSITY_NOT_ASSIGNED));
     }
 
     @PostMapping(value = "/dismiss")
-    public ResponseEntity<ServerResponse<Boolean>> userDismissUniversity(@Valid @RequestBody UserDismissUniversity userDismissUniversity) {
+    public ResponseEntity<ServerResponse<Void>> userDismissUniversity(@Valid @RequestBody UserDismissUniversity userDismissUniversity) {
         boolean userDismissed = universityService.dismissUser(userDismissUniversity.getUniversityId(), AuthenticationUtils.getLoggedUser().getId());
         if (userDismissed) {
-            return ResponseEntity.ok().body(new ServerResponse<>("UNIVERSITY_DISMISSED", userDismissed));
+            return ResponseEntity.ok(new ServerResponse<>(UNIVERSITY_DISMISSED));
         }
 
-        return ResponseEntity.badRequest().body(new ServerResponse<>("UNIVERSITY_NOT_DISMISSED", userDismissed));
+        return ResponseEntity.badRequest().body(new ServerResponse<>(UNIVERSITY_NOT_DISMISSED));
     }
 }

@@ -112,9 +112,7 @@ public class UniversityControllerTest {
                         .content(objectMapper.writeValueAsString(new UserAssignUniversityRequest(2))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("UNIVERSITY_ASSIGNED"))
-                .andExpect(jsonPath("$.content").isBoolean())
-                .andExpect(jsonPath("$.content").value(true));
+                .andExpect(jsonPath("$.message").value("UNIVERSITY_ASSIGNED"));
     }
 
     @Test
@@ -124,9 +122,7 @@ public class UniversityControllerTest {
                         .content(objectMapper.writeValueAsString(new UserAssignUniversityRequest(1))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.message").value("UNIVERSITY_NOT_ASSIGNED"))
-                .andExpect(jsonPath("$.content").isBoolean())
-                .andExpect(jsonPath("$.content").value(false));
+                .andExpect(jsonPath("$.message").value("UNIVERSITY_NOT_ASSIGNED"));
     }
 
     @Test
@@ -153,9 +149,7 @@ public class UniversityControllerTest {
                         .content(objectMapper.writeValueAsString(new UserDismissUniversity(1))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("UNIVERSITY_DISMISSED"))
-                .andExpect(jsonPath("$.content").isBoolean())
-                .andExpect(jsonPath("$.content").value(true));
+                .andExpect(jsonPath("$.message").value("UNIVERSITY_DISMISSED"));
     }
 
     @Test
@@ -165,9 +159,7 @@ public class UniversityControllerTest {
                         .content(objectMapper.writeValueAsString(new UserDismissUniversity(2))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.message").value("UNIVERSITY_NOT_DISMISSED"))
-                .andExpect(jsonPath("$.content").isBoolean())
-                .andExpect(jsonPath("$.content").value(false));
+                .andExpect(jsonPath("$.message").value("UNIVERSITY_NOT_DISMISSED"));
     }
 
     @Test

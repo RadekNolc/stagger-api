@@ -7,10 +7,14 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ServerResponse<T> {
 
-    private String message;
+    private ServerResponseMessage message;
     private T content;
 
     public ServerResponse(String message) {
+        this(ServerResponseMessage.valueOf(message), null);
+    }
+    public ServerResponse(T content) { this(null, content); }
+    public ServerResponse(ServerResponseMessage message) {
         this(message, null);
     }
 }

@@ -12,36 +12,38 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
+import static cz.radeknolc.stagger.model.payload.ServerResponseMessage.*;
+
 @RestControllerAdvice
 public class ControllerExceptionHandler {
 
     @ExceptionHandler(DisabledException.class)
-    public ResponseEntity<?> handleDisabledException() {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ServerResponse<>("ACCOUNT_DISABLED"));
+    public ResponseEntity<ServerResponse<Void>> handleDisabledException() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ServerResponse<>(AUTH_ACCOUNT_DISABLED));
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<?> handleBadCredentialsException() {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ServerResponse<>("BAD_CREDENTIALS"));
+    public ResponseEntity<ServerResponse<Void>> handleBadCredentialsException() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ServerResponse<>(AUTH_BAD_CREDENTIALS));
     }
 
     @ExceptionHandler(AccountExpiredException.class)
-    public ResponseEntity<?> handleAccountExpiredException() {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ServerResponse<>("ACCOUNT_EXPIRED"));
+    public ResponseEntity<ServerResponse<Void>> handleAccountExpiredException() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ServerResponse<>(AUTH_ACCOUNT_EXPIRED));
     }
 
     @ExceptionHandler(LockedException.class)
-    public ResponseEntity<?> handleAccountLockedException() {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ServerResponse<>("ACCOUNT_LOCKED"));
+    public ResponseEntity<ServerResponse<Void>> handleAccountLockedException() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ServerResponse<>(AUTH_ACCOUNT_LOCKED));
     }
 
     @ExceptionHandler(CredentialsExpiredException.class)
-    public ResponseEntity<?> handleCredentialExpiredException() {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ServerResponse<>("CREDENTIALS_EXPIRED"));
+    public ResponseEntity<ServerResponse<Void>> handleCredentialExpiredException() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ServerResponse<>(AUTH_CREDENTIALS_EXPIRED));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleValidationException(MethodArgumentNotValidException exception) {
+    public ResponseEntity<ServerResponse<Map<String, String>>> handleValidationException(MethodArgumentNotValidException exception) {
         Map<String, String> errors = new HashMap<>();
         exception.getAllErrors().forEach(error -> {
             String field = ((FieldError) error).getField();
@@ -49,6 +51,6 @@ public class ControllerExceptionHandler {
             errors.put(field, message);
         });
 
-        return ResponseEntity.badRequest().body(new ServerResponse<>("VALIDATION_ERROR", errors));
+        return ResponseEntity.badRequest().body(new ServerResponse<>(VALIDATION_ERROR, errors));
     }
 }
