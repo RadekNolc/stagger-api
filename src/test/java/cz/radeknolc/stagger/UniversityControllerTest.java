@@ -46,12 +46,12 @@ public class UniversityControllerTest {
     }
 
     @Test
-    public void createUniversity_ValidInput_OkStatusWithMessageAndUniversity() throws Exception {
+    public void createUniversity_ValidInput_CreatedStatusWithMessageAndUniversity() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/university/create").with(user(adminUser)).
                         contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CreateUniversityRequest("Karlova univerzita"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.message").value("UNIVERSITY_CREATED"));
     }
 

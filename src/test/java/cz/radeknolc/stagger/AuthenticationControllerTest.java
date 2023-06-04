@@ -63,7 +63,7 @@ public class AuthenticationControllerTest {
                         .content(objectMapper.writeValueAsString(new LoginRequest("test", "123"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.message").value("BAD_CREDENTIALS"));
+                .andExpect(jsonPath("$.message").value("AUTH_BAD_CREDENTIALS"));
     }
 
     @Test
@@ -85,7 +85,7 @@ public class AuthenticationControllerTest {
                         .content(objectMapper.writeValueAsString(new LoginRequest("admin", "wrongpassword"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.message").value("BAD_CREDENTIALS"));
+                .andExpect(jsonPath("$.message").value("AUTH_BAD_CREDENTIALS"));
     }
 
     @Test
@@ -95,7 +95,7 @@ public class AuthenticationControllerTest {
                     .content(objectMapper.writeValueAsString(new LoginRequest("inactive", "inactive"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.message").value("ACCOUNT_DISABLED"));
+                .andExpect(jsonPath("$.message").value("AUTH_ACCOUNT_DISABLED"));
     }
 
     @Test
@@ -105,7 +105,7 @@ public class AuthenticationControllerTest {
                         .content(objectMapper.writeValueAsString(new LoginRequest("expired", "expired"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.message").value("ACCOUNT_EXPIRED"));
+                .andExpect(jsonPath("$.message").value("AUTH_ACCOUNT_EXPIRED"));
     }
 
     @Test
@@ -115,7 +115,7 @@ public class AuthenticationControllerTest {
                         .content(objectMapper.writeValueAsString(new LoginRequest("locked", "locked"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.message").value("ACCOUNT_LOCKED"));
+                .andExpect(jsonPath("$.message").value("AUTH_ACCOUNT_LOCKED"));
     }
 
     @Test
@@ -125,6 +125,6 @@ public class AuthenticationControllerTest {
                         .content(objectMapper.writeValueAsString(new LoginRequest("credentials_expired", "credentials_expired"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.message").value("CREDENTIALS_EXPIRED"));
+                .andExpect(jsonPath("$.message").value("AUTH_CREDENTIALS_EXPIRED"));
     }
 }

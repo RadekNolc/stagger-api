@@ -33,13 +33,13 @@ public class UserControllerTest {
     private UserRepository userRepository;
 
     @Test
-    public void registerUser_ValidInput_OkStatusWithMessageAndUser() throws Exception {
+    public void registerUser_ValidInput_CreatedStatusWithMessageAndUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/user/register").with(anonymous())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CreateUserRequest("register", "register", "register@stagger.cz"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("REGISTRATION_SUCCESS"));
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.message").value("USER_REGISTRATION_SUCCESS"));
     }
 
     @Test
