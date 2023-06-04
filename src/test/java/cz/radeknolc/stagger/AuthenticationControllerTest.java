@@ -29,7 +29,7 @@ public class AuthenticationControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    public void authenticate_ValidCredentials_Token() throws Exception {
+    public void authenticate_ValidCredentials_OkStatusWithToken() throws Exception {
         // Administrator authentication
         mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -57,7 +57,7 @@ public class AuthenticationControllerTest {
     }
 
     @Test
-    public void authenticate_NotExistingUser_ErrorMessage() throws Exception {
+    public void authenticate_NotExistingUser_ClientErrorStatusWithMessage() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate").with(anonymous())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new LoginRequest("test", "123"))))
@@ -67,7 +67,7 @@ public class AuthenticationControllerTest {
     }
 
     @Test
-    public void authenticate_BlankFields_ValidationError() throws Exception {
+    public void authenticate_BlankFields_ClientErrorStatusWithMessageAndValidationErrors() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate").with(anonymous())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new LoginRequest("", ""))))
@@ -79,7 +79,7 @@ public class AuthenticationControllerTest {
     }
 
     @Test
-    public void authenticate_WrongCredentials_ErrorMessage() throws Exception {
+    public void authenticate_WrongCredentials_ClientErrorStatusWithMessage() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate").with(anonymous())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new LoginRequest("admin", "wrongpassword"))))
@@ -89,7 +89,7 @@ public class AuthenticationControllerTest {
     }
 
     @Test
-    public void authenticate_DisabledAccount_ErrorMessage() throws Exception {
+    public void authenticate_DisabledAccount_ClientErrorStatusWithMessage() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate").with(anonymous())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(new LoginRequest("inactive", "inactive"))))
@@ -99,7 +99,7 @@ public class AuthenticationControllerTest {
     }
 
     @Test
-    public void authenticate_ExpiredAccount_ErrorMessage() throws Exception {
+    public void authenticate_ExpiredAccount_ClientErrorStatusWithMessage() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate").with(anonymous())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new LoginRequest("expired", "expired"))))
@@ -109,7 +109,7 @@ public class AuthenticationControllerTest {
     }
 
     @Test
-    public void authenticate_LockedAccount_ErrorMessage() throws Exception {
+    public void authenticate_LockedAccount_ClientErrorStatusWithMessage() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate").with(anonymous())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new LoginRequest("locked", "locked"))))
@@ -119,7 +119,7 @@ public class AuthenticationControllerTest {
     }
 
     @Test
-    public void authenticate_CredentialsExpired_ErrorMessage() throws Exception {
+    public void authenticate_CredentialsExpired_ClientErrorStatusWithMessage() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate").with(anonymous())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new LoginRequest("credentials_expired", "credentials_expired"))))

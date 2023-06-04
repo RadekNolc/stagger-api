@@ -64,7 +64,6 @@ public class UniversityControllerTest {
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.message").value("VALIDATION_ERROR"))
                 .andExpect(jsonPath("$.content.name").value("UNIQUE"));
-
     }
 
     @Test
@@ -106,7 +105,7 @@ public class UniversityControllerTest {
     }
 
     @Test
-    public void userAssignUniversity_ValidRequest_OkStatusWithMessageAndTrue() throws Exception {
+    public void userAssignUniversity_ValidRequest_OkStatusWithMessage() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/university/assign").with(user(normalUser))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new UserAssignUniversityRequest(2))))
@@ -116,7 +115,7 @@ public class UniversityControllerTest {
     }
 
     @Test
-    public void userAssignUniversity_AlreadyAssignedUniversity_ClientErrorStatusWithMessageAndFalse() throws Exception {
+    public void userAssignUniversity_AlreadyAssignedUniversity_ClientErrorStatusWithMessage() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/university/assign").with(user(normalUser))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new UserAssignUniversityRequest(1))))
@@ -143,7 +142,7 @@ public class UniversityControllerTest {
     }
 
     @Test
-    public void userDismissUniversity_ValidRequest_OkStatusWithMessageAndTrue() throws Exception {
+    public void userDismissUniversity_ValidRequest_OkStatusWithMessage() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/university/dismiss").with(user(normalUser))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new UserDismissUniversity(1))))
@@ -153,7 +152,7 @@ public class UniversityControllerTest {
     }
 
     @Test
-    public void userDismissUniversity_NotAssignedUniversity_ClientErrorWithMessageAndFalse() throws Exception {
+    public void userDismissUniversity_NotAssignedUniversity_ClientErrorWithMessage() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/university/dismiss").with(user(normalUser))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new UserDismissUniversity(2))))

@@ -65,7 +65,7 @@ public class NotificationServiceTest {
     }
 
     @Test
-    public void createNotification_ValidNotificationCreate_Notification() {
+    public void createNotification_ValidInput_Notification() {
         Notification newNotification = new Notification(NotificationType.PRIMARY, NotificationIcon.ACTIVITY, "TEST_NOTIFICATION");
 
         newNotification = notificationService.createNotification(newNotification, 1L);
@@ -78,7 +78,7 @@ public class NotificationServiceTest {
     }
 
     @Test
-    public void createNotification_ReceiverNoExist_Null() {
+    public void createNotification_NotExistingReceiver_Null() {
         Notification newNotification = new Notification(NotificationType.PRIMARY, NotificationIcon.ACTIVITY, "TEST_NOTIFICATION");
 
         newNotification = notificationService.createNotification(newNotification, 1000000L);

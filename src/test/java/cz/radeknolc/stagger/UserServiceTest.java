@@ -27,7 +27,7 @@ public class UserServiceTest {
     private UserRepository userRepository;
 
     @Test
-    public void registerUser_ValidUserCreation_User() {
+    public void registerUser_ValidInput_User() {
         final int originalUsersCount = userRepository.findAll().size();
         CreateUserRequest request = new CreateUserRequest("user01", "user01", "user01@stagger.cz");
         User user = userService.registerUser(request);

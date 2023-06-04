@@ -33,7 +33,7 @@ public class UserControllerTest {
     private UserRepository userRepository;
 
     @Test
-    public void registerUser_ValidInput_OkStatus() throws Exception {
+    public void registerUser_ValidInput_OkStatusWithMessageAndUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/user/register").with(anonymous())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CreateUserRequest("register", "register", "register@stagger.cz"))))
@@ -43,7 +43,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void registerUser_AlreadyRegisteredUsername_ClientErrorStatus() throws Exception {
+    public void registerUser_AlreadyRegisteredUsername_ClientErrorStatusWithMessageAndValidationErrors() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/user/register").with(anonymous())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CreateUserRequest("duplicate", "duplicate", "duplicate@stagger.cz"))))
@@ -59,7 +59,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void registerUser_AlreadyRegisteredEmail_ClientErrorStatus() throws Exception {
+    public void registerUser_AlreadyRegisteredEmail_ClientErrorStatusWithMessageAndValidationErrors() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/user/register").with(anonymous())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CreateUserRequest("duplicate", "duplicate", "duplicate@stagger.cz"))))
@@ -75,7 +75,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void registerUser_InvalidEmailFormat_ClientErrorStatus() throws Exception {
+    public void registerUser_InvalidEmailFormat_ClientErrorStatusWithMessageAndValidationErrors() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/user/register").with(anonymous())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CreateUserRequest("invalidemail", "invalidemail", "invalidemail"))))

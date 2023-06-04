@@ -66,7 +66,7 @@ public class NotificationControllerTest {
     }
 
     @Test
-    public void readNotification_EmptyNotificationId_ClientErrorStatus() throws Exception {
+    public void readNotification_EmptyNotificationId_ClientErrorStatusWithMessageAndValidationErrors() throws Exception {
         Optional<User> user = userRepository.findByUsername("user");
 
         if (user.isPresent()) {
@@ -82,12 +82,12 @@ public class NotificationControllerTest {
     }
 
     @Test
-    public void readNotification_NotExistingNotification_ClientErrorStatus() throws Exception {
+    public void readNotification_NotExistingNotification_ClientErrorStatusWithMessageAndValidationErrors() throws Exception {
         Optional<User> user = userRepository.findByUsername("user");
         if (user.isPresent()) {
             mockMvc.perform(MockMvcRequestBuilders.post("/notification/read").with(user(user.get()))
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(new ReadNotificationRequest(10000))))
+                            .content(objectMapper.writeValueAsString(new ReadNotificationRequest(0))))
                     .andExpect(status().is4xxClientError())
                     .andExpect(jsonPath("$.message").value("VALIDATION_ERROR"))
                     .andExpect(jsonPath("$.content.notificationId").value("NOT_EXISTS"));
