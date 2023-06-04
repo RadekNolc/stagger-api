@@ -13,7 +13,7 @@ import java.lang.annotation.*;
 public @interface Exists {
     Class <? extends BaseEntity> entityClass();
     String targetColumn();
-    String message() default "already exists";
+    String message() default "does not exist";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
