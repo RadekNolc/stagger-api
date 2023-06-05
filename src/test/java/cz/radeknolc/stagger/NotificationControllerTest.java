@@ -18,8 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -85,6 +84,21 @@ public class NotificationControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/notification/read").with(anonymous())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ReadNotificationRequest(1))))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void userNotifications_ValidRequest_OkStatusWithNotificationList() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/notification/user").with(user(normalUser)))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content.length()").value(2));
+    }
+
+    @Test
+    public void userNotifications_NotAuthenticated_UnauthorizedStatus() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/notification/user").with(anonymous()))
                 .andExpect(status().isUnauthorized());
     }
 }

@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @AutoConfigureMockMvc
@@ -77,5 +79,19 @@ public class NotificationServiceTest {
 
         newNotification = notificationService.createNotification(newNotification, 0);
         assertNull(newNotification);
+    }
+
+    @Test
+    public void getUserNotifications_ValidInput_List() {
+        List<Notification> notifications = notificationService.getUserNotifications(normalUser.getId());
+        assertNotNull(notifications);
+        assertEquals(2, notifications.size());
+    }
+
+    @Test
+    public void getUserNotifications_NotExistingUser_List() {
+        List<Notification> notifications = notificationService.getUserNotifications(0);
+        assertNotNull(notifications);
+        assertEquals(0, notifications.size());
     }
 }
