@@ -17,19 +17,13 @@ VALUES (6, 'credentials_expired', '$2a$12$4ofwKDUTp9OcDvWLo2tsEekFTh9ZBW28okaPhd
 INSERT INTO "role" ("id", "name")
 VALUES (1, 'ADMIN');
 INSERT INTO "role" ("id", "name")
-VALUES (2, 'MODERATOR');
-INSERT INTO "role" ("id", "name")
-VALUES (3, 'USER');
+VALUES (2, 'USER');
 
 /* USER x ROLE mapping */
 INSERT INTO "roles_users_map" ("id", "user_id", "role_id")
 VALUES (1, 1, 1);
 INSERT INTO "roles_users_map" ("id", "user_id", "role_id")
-VALUES (2, 1, 2);
-INSERT INTO "roles_users_map" ("id", "user_id", "role_id")
-VALUES (3, 2, 3);
-INSERT INTO "roles_users_map" ("id", "user_id", "role_id")
-VALUES (4, 2, 3);
+VALUES (2, 2, 2);
 
 /* UNIVERSITY TABLE */
 INSERT INTO "university" ("id", "name", "created_at", "created_by", "updated_at", "updated_by")

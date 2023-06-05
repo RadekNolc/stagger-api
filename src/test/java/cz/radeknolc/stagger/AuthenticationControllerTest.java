@@ -39,9 +39,8 @@ public class AuthenticationControllerTest {
                 .andExpect(jsonPath("$.username").value("admin"))
                 .andExpect(jsonPath("$.token").isNotEmpty())
                 .andExpect(jsonPath("$.roles").isArray())
-                .andExpect(jsonPath("$.roles.length()").value(2))
-                .andExpect(jsonPath("$.roles[?(@ == 'ROLE_ADMIN')]").exists())
-                .andExpect(jsonPath("$.roles[?(@ == 'ROLE_MODERATOR')]").exists());
+                .andExpect(jsonPath("$.roles.length()").value(1))
+                .andExpect(jsonPath("$.roles[?(@ == 'ROLE_ADMIN')]").exists());
 
         // User authentication
         mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate")
