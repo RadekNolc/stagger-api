@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -77,5 +78,13 @@ public class NotificationControllerTest {
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.message").value("VALIDATION_ERROR"))
                 .andExpect(jsonPath("$.content.notificationId").value("NOT_EXISTS"));
+    }
+
+    @Test
+    public void readNotification_NotAuthenticated_UnauthorizedStatus() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/notification/read").with(anonymous())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new ReadNotificationRequest(1))))
+                .andExpect(status().isUnauthorized());
     }
 }

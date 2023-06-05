@@ -31,7 +31,7 @@ public class AuthenticationControllerTest {
     @Test
     public void authenticate_ValidCredentials_OkStatusWithToken() throws Exception {
         // Administrator authentication
-        mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate")
+        mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate").with(anonymous())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(new LoginRequest("admin", "admin"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -43,7 +43,7 @@ public class AuthenticationControllerTest {
                 .andExpect(jsonPath("$.roles[?(@ == 'ROLE_ADMIN')]").exists());
 
         // User authentication
-        mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate")
+        mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate").with(anonymous())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new LoginRequest("user", "user"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))

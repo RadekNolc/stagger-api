@@ -2,8 +2,8 @@ package cz.radeknolc.stagger.controller;
 
 import cz.radeknolc.stagger.model.University;
 import cz.radeknolc.stagger.model.payload.ServerResponse;
-import cz.radeknolc.stagger.model.request.UserAssignUniversityRequest;
 import cz.radeknolc.stagger.model.request.CreateUniversityRequest;
+import cz.radeknolc.stagger.model.request.UserAssignUniversityRequest;
 import cz.radeknolc.stagger.model.request.UserDismissUniversity;
 import cz.radeknolc.stagger.service.UniversityService;
 import cz.radeknolc.stagger.util.AuthenticationUtils;
@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,18 +31,21 @@ public class UniversityController {
     }
 
     @PostMapping(value = "/create")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ServerResponse<University>> createUniversity(@Valid @RequestBody CreateUniversityRequest createUniversityRequest) {
         University newUniversity = universityService.createUniversity(createUniversityRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ServerResponse<>(UNIVERSITY_CREATED, newUniversity));
     }
 
     @GetMapping(value = "/user")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ServerResponse<List<University>>> userUniversities() {
         List<University> userUniversities = universityService.getUserUniversities(AuthenticationUtils.getLoggedUser().getId());
         return ResponseEntity.ok(new ServerResponse<>(userUniversities));
     }
 
     @PostMapping(value = "/assign")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ServerResponse<Void>> userAssignUniversity(@Valid @RequestBody UserAssignUniversityRequest userAssignUniversityRequest) {
         boolean userAssigned = universityService.assignUser(userAssignUniversityRequest.getUniversityId(), AuthenticationUtils.getLoggedUser().getId());
         if (userAssigned) {
@@ -52,6 +56,7 @@ public class UniversityController {
     }
 
     @PostMapping(value = "/dismiss")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ServerResponse<Void>> userDismissUniversity(@Valid @RequestBody UserDismissUniversity userDismissUniversity) {
         boolean userDismissed = universityService.dismissUser(userDismissUniversity.getUniversityId(), AuthenticationUtils.getLoggedUser().getId());
         if (userDismissed) {

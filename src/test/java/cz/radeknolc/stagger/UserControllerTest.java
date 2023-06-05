@@ -2,7 +2,6 @@ package cz.radeknolc.stagger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.radeknolc.stagger.model.request.CreateUserRequest;
-import cz.radeknolc.stagger.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -28,9 +27,6 @@ public class UserControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Test
     public void registerUser_ValidInput_CreatedStatusWithMessageAndUser() throws Exception {

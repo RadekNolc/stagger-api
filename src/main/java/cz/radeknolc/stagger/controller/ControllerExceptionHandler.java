@@ -3,6 +3,7 @@ package cz.radeknolc.stagger.controller;
 import cz.radeknolc.stagger.model.payload.ServerResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.*;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -52,5 +53,10 @@ public class ControllerExceptionHandler {
         });
 
         return ResponseEntity.badRequest().body(new ServerResponse<>(VALIDATION_ERROR, errors));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ServerResponse<Void>> handleAccessDeniedException() {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ServerResponse<>(AUTH_ACCESS_DENIED));
     }
 }

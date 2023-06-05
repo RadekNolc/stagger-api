@@ -5,28 +5,29 @@ public enum ServerResponseMessage {
     /*
      AUTHENTICATION
      */
-    AUTH_ACCOUNT_DISABLED,
-    AUTH_BAD_CREDENTIALS,
-    AUTH_ACCOUNT_EXPIRED,
-    AUTH_ACCOUNT_LOCKED,
-    AUTH_CREDENTIALS_EXPIRED,
+    AUTH_ACCOUNT_DISABLED, // Disabled account
+    AUTH_BAD_CREDENTIALS, // Wrong credentials
+    AUTH_ACCOUNT_EXPIRED, // Expired account
+    AUTH_ACCOUNT_LOCKED, // Locked account
+    AUTH_CREDENTIALS_EXPIRED, // Expired credentials
+    AUTH_ACCESS_DENIED, // No privileges
 
     /*
      VALIDATION
      */
-    VALIDATION_ERROR,
+    VALIDATION_ERROR, // Error during validation
 
     /*
      UNIVERSITY
      */
-    UNIVERSITY_CREATED,
-    UNIVERSITY_ASSIGNED,
-    UNIVERSITY_NOT_ASSIGNED,
-    UNIVERSITY_DISMISSED,
-    UNIVERSITY_NOT_DISMISSED,
+    UNIVERSITY_CREATED, // University created
+    UNIVERSITY_ASSIGNED, // University assigned to user
+    UNIVERSITY_NOT_ASSIGNED, // University not assigned to user
+    UNIVERSITY_DISMISSED, // University dismissed from user
+    UNIVERSITY_NOT_DISMISSED, // University not dismissed from user
 
     /*
     USER
      */
-    USER_REGISTRATION_SUCCESS,
+    USER_REGISTRATION_SUCCESS, // User registration success
 }

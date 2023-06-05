@@ -67,6 +67,16 @@ public class UniversityControllerTest {
     }
 
     @Test
+    public void createUniversity_NotAuthorized_ForbiddenStatus() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/university/create").with(user(normalUser))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new CreateUniversityRequest("Masarykova univerzita"))))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.message").value("AUTH_ACCESS_DENIED"));
+    }
+
+    @Test
     public void createUniversity_NotAuthenticated_UnauthorizedStatus() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/university/create").with(anonymous()).
                         contentType(MediaType.APPLICATION_JSON)
@@ -77,6 +87,12 @@ public class UniversityControllerTest {
     @Test
     public void allUniversities_ValidRequest_OkStatusWithUniversityList() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/university/all").with(user(normalUser)))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content.length()").value(2));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/university/all").with(user(adminUser)))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isArray())
@@ -102,6 +118,14 @@ public class UniversityControllerTest {
     public void userUniversities_NotAuthenticated_UnauthorizedStatus() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/university/user").with(anonymous()))
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void userUniversities_NotAuthorized_ForbiddenStatus() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/university/user").with(user(adminUser)))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.message").value("AUTH_ACCESS_DENIED"));
     }
 
     @Test
@@ -133,6 +157,16 @@ public class UniversityControllerTest {
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.message").value("VALIDATION_ERROR"))
                 .andExpect(jsonPath("$.content.universityId").value("NOT_EXISTS"));
+    }
+
+    @Test
+    public void userAssignUniversity_NotAuthorized_ForbiddenStatus() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/university/assign").with(user(adminUser))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new UserAssignUniversityRequest(2))))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.message").value("AUTH_ACCESS_DENIED"));
     }
 
     @Test
@@ -170,6 +204,16 @@ public class UniversityControllerTest {
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.message").value("VALIDATION_ERROR"))
                 .andExpect(jsonPath("$.content.universityId").value("NOT_EXISTS"));
+    }
+
+    @Test
+    public void userDismissUniversity_NotAuthorized_ForbiddenStatus() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/university/dismiss").with(user(adminUser))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new UserDismissUniversity(1))))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.message").value("AUTH_ACCESS_DENIED"));
     }
 
     @Test
