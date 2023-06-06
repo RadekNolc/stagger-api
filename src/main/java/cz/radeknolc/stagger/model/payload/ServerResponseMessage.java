@@ -11,6 +11,7 @@ public enum ServerResponseMessage {
     AUTH_ACCOUNT_LOCKED, // Locked account
     AUTH_CREDENTIALS_EXPIRED, // Expired credentials
     AUTH_ACCESS_DENIED, // No privileges
+    AUTH_TOKEN_INVALID, // Invalid token from verification
 
     /*
      VALIDATION

@@ -1,5 +1,6 @@
-package cz.radeknolc.stagger.model.payload;
+package cz.radeknolc.stagger.model.request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,8 +10,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TokenResponse {
+public class VerifyTokenRequest {
 
+    @NotBlank(message = "NOT_BLANK")
     private String token;
-
 }

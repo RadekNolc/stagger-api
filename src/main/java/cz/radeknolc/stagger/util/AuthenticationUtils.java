@@ -1,22 +1,27 @@
 package cz.radeknolc.stagger.util;
 
 import cz.radeknolc.stagger.model.User;
+import cz.radeknolc.stagger.repository.UserRepository;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Component
 @Slf4j
 public class AuthenticationUtils {
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Value("${jwt.secret}")
     private String secret;
@@ -24,14 +29,20 @@ public class AuthenticationUtils {
     private final static long TOKEN_EXPIRATION_TIME = 5*60*60; // in seconds
 
     public String generateToken(Authentication authentication) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = (User) authentication.getPrincipal();
 
         return Jwts.builder()
-                .setSubject(userDetails.getUsername())
+                .setSubject(user.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION_TIME * 1000))
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
+    }
+
+    public User getUserFromToken(String token) {
+        String username = getUsernameFromToken(token);
+        Optional<User> user = userRepository.findByUsername(username);
+        return user.orElse(null);
     }
 
     public String getUsernameFromToken(String token) {

@@ -23,6 +23,7 @@ public abstract class GeneralSecurityFilterChain {
 
         httpSecurity.authorizeHttpRequests(request -> request
                 .requestMatchers("/authentication/authenticate").permitAll()
+                .requestMatchers("/authentication/verify").permitAll()
                 .requestMatchers("/user/register").permitAll()
                 .anyRequest().authenticated()
         );
