@@ -16,17 +16,23 @@ import lombok.Setter;
 public class Notification extends AuditedEntity {
 
     @Enumerated(value = EnumType.STRING)
-    private NotificationType type;
+    private NotificationCategory category;
+    private String title;
+    private String description;
+    private String icon;
     @Enumerated(value = EnumType.STRING)
-    private NotificationIcon icon;
-    private String message;
+    private NotificationState state;
     private boolean isRead;
     @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     @JsonIgnore
     private User user;
 
-    public Notification(NotificationType type, NotificationIcon icon, String message) {
-        this(type, icon, message, false, null);
+    public Notification(NotificationState state, String title, String description, String icon) {
+        this(NotificationCategory.ALERT, state, title, description, icon);
+    }
+
+    public Notification(NotificationCategory category, NotificationState state, String title, String description, String icon) {
+        this(category, title, description, icon, state, false, null);
     }
 }

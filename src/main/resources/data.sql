@@ -41,11 +41,13 @@ VALUES (2, 1, 'KIV', 'PPA2');
 INSERT INTO "universities_users_map" ("id", "user_id", "university_id")
 VALUES (1, 2, 1);
 
-INSERT INTO "notification" ("id", "user_id", "type", "icon", "message", "is_read", "created_at", "created_by", "updated_at", "updated_by")
-VALUES (1, 2, 'PRIMARY', 'ACTIVITY', 'SUCCESS_ENROLLMENT', 0, '2023-05-16 10:13:47', 'dataSQL', NULL, NULL);
-INSERT INTO "notification" ("id", "user_id", "type", "icon", "message", "is_read", "created_at", "created_by", "updated_at", "updated_by")
-VALUES (2, 2, 'DANGER', 'BELL', 'DANGER_MESSAGE', 0, '2023-05-18 10:13:47', 'dataSQL', NULL, NULL);
-INSERT INTO "notification" ("id", "user_id", "type", "icon", "message", "is_read", "created_at", "created_by", "updated_at", "updated_by")
-VALUES (3, 1, 'PRIMARY', 'ACTIVITY', 'SUCCESS_MESSAGE', 0, '2023-05-19 10:13:47', 'dataSQL', NULL, NULL);
-INSERT INTO "notification" ("id", "user_id", "type", "icon", "message", "is_read", "created_at", "created_by", "updated_at", "updated_by")
-VALUES (4, 2, 'PRIMARY', 'ACTIVITY', 'SUCCESS_MESSAGE', 1, '2023-05-22 15:10:17', 'dataSQL', NULL, NULL);
+INSERT INTO "notification" ("id", "user_id", "category", "title", "description", "icon", "state", "is_read", "created_at", "created_by", "updated_at", "updated_by")
+VALUES (1, 2, 'ALERT', 'TEST_ALERT', 'Testing alert', 'technology-2', 'PRIMARY', 0, '2023-05-16 10:13:47', 'dataSQL', NULL, NULL);
+INSERT INTO "notification" ("id", "user_id", "category", "title", "description", "icon", "state", "is_read", "created_at", "created_by", "updated_at", "updated_by")
+VALUES (2, 2, 'LOG', 'Test log', 'OK', 'technology-2', 'SUCCESS', 0, '2023-05-18 10:13:47', 'dataSQL', NULL, NULL);
+INSERT INTO "notification" ("id", "user_id", "category", "title", "description", "icon", "state", "is_read", "created_at", "created_by", "updated_at", "updated_by")
+VALUES (3, 1, 'ALERT', 'TEST_ALERT3', 'Testing alert3', 'technology-2', 'WARNING', 0, '2023-05-19 10:13:47', 'dataSQL', NULL, NULL);
+INSERT INTO "notification" ("id", "user_id", "category", "title", "description", "icon", "state", "is_read", "created_at", "created_by", "updated_at", "updated_by")
+VALUES (4, 2, 'UPDATE', 'TEST_ALERT4', 'Testing alert4', 'technology-2', 'SUCCESS', 0, '2023-05-19 10:13:47', 'dataSQL', NULL, NULL);
+INSERT INTO "notification" ("id", "user_id", "category", "title", "description", "icon", "state", "is_read", "created_at", "created_by", "updated_at", "updated_by")
+VALUES (5, 2, 'ALERT', 'TEST_ALERT5', 'Testing alert5', 'technology-2', 'SUCCESS', 1, '2023-05-19 10:13:47', 'dataSQL', NULL, NULL);

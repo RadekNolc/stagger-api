@@ -1,8 +1,7 @@
 package cz.radeknolc.stagger;
 
 import cz.radeknolc.stagger.model.Notification;
-import cz.radeknolc.stagger.model.NotificationIcon;
-import cz.radeknolc.stagger.model.NotificationType;
+import cz.radeknolc.stagger.model.NotificationState;
 import cz.radeknolc.stagger.model.User;
 import cz.radeknolc.stagger.repository.UserRepository;
 import cz.radeknolc.stagger.service.NotificationService;
@@ -62,30 +61,31 @@ public class NotificationServiceTest {
 
     @Test
     public void createNotification_ValidInput_Notification() {
-        Notification newNotification = new Notification(NotificationType.PRIMARY, NotificationIcon.ACTIVITY, "TEST_NOTIFICATION");
+        Notification notification = new Notification(NotificationState.PRIMARY, "Notification title", "Description", "technology-2");
 
-        newNotification = notificationService.createNotification(newNotification, 1);
-        assertNotNull(newNotification);
-        assertTrue(newNotification.getId() > 0);
-        assertEquals(NotificationType.PRIMARY, newNotification.getType());
-        assertEquals(NotificationIcon.ACTIVITY, newNotification.getIcon());
-        assertNotNull(newNotification.getMessage());
-        assertFalse(newNotification.isRead());
+        notification = notificationService.createNotification(notification, 1);
+        assertNotNull(notification);
+        assertTrue(notification.getId() > 0);
+        assertEquals(NotificationState.PRIMARY, notification.getState());
+        assertEquals("technology-2", notification.getIcon());
+        assertNotNull(notification.getTitle());
+        assertNotNull(notification.getDescription());
+        assertFalse(notification.isRead());
     }
 
     @Test
     public void createNotification_NotExistingReceiver_Null() {
-        Notification newNotification = new Notification(NotificationType.PRIMARY, NotificationIcon.ACTIVITY, "TEST_NOTIFICATION");
+        Notification notification = new Notification(NotificationState.PRIMARY, "Notification title", "Description", "technology-2");
 
-        newNotification = notificationService.createNotification(newNotification, 0);
-        assertNull(newNotification);
+        notification = notificationService.createNotification(notification, 0);
+        assertNull(notification);
     }
 
     @Test
     public void getUserNotifications_ValidInput_List() {
         List<Notification> notifications = notificationService.getUserNotifications(normalUser.getId());
         assertNotNull(notifications);
-        assertEquals(2, notifications.size());
+        assertEquals(3, notifications.size());
     }
 
     @Test
