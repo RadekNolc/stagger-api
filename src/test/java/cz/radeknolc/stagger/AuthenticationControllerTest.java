@@ -62,13 +62,7 @@ public class AuthenticationControllerTest {
                         .content(objectMapper.writeValueAsString(new LoginRequest("admin", "admin"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.username").value("admin"))
-                .andExpect(jsonPath("$.emailAddress").value("admin@stagger.cz"))
-                .andExpect(jsonPath("$.token").isNotEmpty())
-                .andExpect(jsonPath("$.roles").isArray())
-                .andExpect(jsonPath("$.roles.length()").value(1))
-                .andExpect(jsonPath("$.roles[?(@ == 'ROLE_ADMIN')]").exists());
+                .andExpect(jsonPath("$.token").isNotEmpty());
 
         // User authentication
         mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate").with(anonymous())
@@ -76,13 +70,7 @@ public class AuthenticationControllerTest {
                         .content(objectMapper.writeValueAsString(new LoginRequest("user", "user"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(2))
-                .andExpect(jsonPath("$.username").value("user"))
-                .andExpect(jsonPath("$.emailAddress").value("user@stagger.cz"))
-                .andExpect(jsonPath("$.token").isNotEmpty())
-                .andExpect(jsonPath("$.roles").isArray())
-                .andExpect(jsonPath("$.roles.length()").value(1))
-                .andExpect(jsonPath("$.roles[?(@ == 'ROLE_USER')]").exists());
+                .andExpect(jsonPath("$.token").isNotEmpty());
     }
 
     @Test
@@ -168,8 +156,30 @@ public class AuthenticationControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isNotEmpty())
+                .andExpect(jsonPath("$.content.id").value(2))
                 .andExpect(jsonPath("$.content.username").value("user"))
-                .andExpect(jsonPath("$.content.id").value(2));
+                .andExpect(jsonPath("$.content.emailAddress").value("user@stagger.cz"))
+                .andExpect(jsonPath("$.content.phoneNumber").value("123456789"))
+                .andExpect(jsonPath("$.content.roles").isArray())
+                .andExpect(jsonPath("$.content.roles.length()").value(1))
+                .andExpect(jsonPath("$.content.roles[?(@ == 'ROLE_USER')]").exists());
+
+        authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken("admin", "admin"));
+        token = authenticationUtils.generateToken(authentication);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/authentication/verify").with(user(adminUser))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new VerifyTokenRequest(token))))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isNotEmpty())
+                .andExpect(jsonPath("$.content.id").value(1))
+                .andExpect(jsonPath("$.content.username").value("admin"))
+                .andExpect(jsonPath("$.content.emailAddress").value("admin@stagger.cz"))
+                .andExpect(jsonPath("$.content.phoneNumber").value("123456789"))
+                .andExpect(jsonPath("$.content.roles").isArray())
+                .andExpect(jsonPath("$.content.roles.length()").value(1))
+                .andExpect(jsonPath("$.content.roles[?(@ == 'ROLE_ADMIN')]").exists());
     }
 
     @Test
@@ -182,9 +192,7 @@ public class AuthenticationControllerTest {
                         .content(objectMapper.writeValueAsString(new VerifyTokenRequest(token))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").isNotEmpty())
-                .andExpect(jsonPath("$.content.username").value("user"))
-                .andExpect(jsonPath("$.content.id").value(2));
+                .andExpect(jsonPath("$.content").isNotEmpty());
     }
 
     @Test
