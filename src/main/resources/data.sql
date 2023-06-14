@@ -26,10 +26,10 @@ INSERT INTO "roles_users_map" ("id", "user_id", "role_id")
 VALUES (2, 2, 2);
 
 /* UNIVERSITY TABLE */
-INSERT INTO "university" ("id", "name", "created_at", "created_by", "updated_at", "updated_by")
-VALUES (1, 'Západočeská univerzita', '2023-04-16 00:13:47', 'dataSQL', NULL, NULL);
-INSERT INTO "university" ("id", "name", "created_at", "created_by", "updated_at", "updated_by")
-VALUES (2, 'Jihočeská univerzita', '2023-05-19 10:03:37', 'dataSQL', NULL, NULL);
+INSERT INTO "university" ("id", "abbreviation", "stag_url_address", "created_at", "created_by", "updated_at", "updated_by")
+VALUES (1, 'UWB', 'www.portal.zcu.cz', '2023-04-16 00:13:47', 'dataSQL', NULL, NULL);
+INSERT INTO "university" ("id", "abbreviation", "stag_url_address", "created_at", "created_by", "updated_at", "updated_by")
+VALUES (2, 'USB', 'www.portal.jcu.cz', '2023-05-19 10:03:37', 'dataSQL', NULL, NULL);
 
 /* SUBJECT TABLE */
 INSERT INTO "subject" ("id", "university_id", "department", "name")

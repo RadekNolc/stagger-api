@@ -53,10 +53,12 @@ public class UniversityServiceTest {
 
     @Test
     public void createUniversity_ValidUniversityCreate_University() {
-        CreateUniversityRequest createUniversityRequest = new CreateUniversityRequest("Not existing university");
+        CreateUniversityRequest createUniversityRequest = new CreateUniversityRequest("NOT_EXIST", "www.example.com");
 
         University createdUniversity = universityService.createUniversity(createUniversityRequest);
         assertNotNull(createdUniversity);
+        assertEquals("NOT_EXIST", createdUniversity.getAbbreviation());
+        assertEquals("www.example.com", createdUniversity.getStagUrlAddress());
         assertTrue(createdUniversity.getId() > 0);
     }
 

@@ -2,6 +2,7 @@ package cz.radeknolc.stagger.controller;
 
 import cz.radeknolc.stagger.model.University;
 import cz.radeknolc.stagger.model.payload.ServerResponse;
+import cz.radeknolc.stagger.model.payload.UniversityResponse;
 import cz.radeknolc.stagger.model.request.CreateUniversityRequest;
 import cz.radeknolc.stagger.model.request.UserAssignUniversityRequest;
 import cz.radeknolc.stagger.model.request.UserDismissUniversity;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import static cz.radeknolc.stagger.model.payload.ServerResponseMessage.*;
@@ -26,8 +28,13 @@ public class UniversityController {
     private UniversityService universityService;
 
     @GetMapping(value = "/all")
-    public ResponseEntity<ServerResponse<List<University>>> allUniversities() {
-        return ResponseEntity.ok(new ServerResponse<>(universityService.getAllUniversities()));
+    public ResponseEntity<ServerResponse<List<UniversityResponse>>> allUniversities() {
+        List<UniversityResponse> universityDetailsResponse = new LinkedList<>();
+        for (University university : universityService.getAllUniversities()) {
+            universityDetailsResponse.add(new UniversityResponse(university));
+        }
+
+        return ResponseEntity.ok(new ServerResponse<>(universityDetailsResponse));
     }
 
     @PostMapping(value = "/create")
@@ -39,9 +46,13 @@ public class UniversityController {
 
     @GetMapping(value = "/user")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ServerResponse<List<University>>> userUniversities() {
-        List<University> userUniversities = universityService.getUserUniversities(AuthenticationUtils.getLoggedUser().getId());
-        return ResponseEntity.ok(new ServerResponse<>(userUniversities));
+    public ResponseEntity<ServerResponse<List<UniversityResponse>>> userUniversities() {
+        List<UniversityResponse> universityDetailsResponse = new LinkedList<>();
+        for(University university : universityService.getUserUniversities(AuthenticationUtils.getLoggedUser().getId())) {
+            universityDetailsResponse.add(new UniversityResponse(university));
+        }
+
+        return ResponseEntity.ok(new ServerResponse<>(universityDetailsResponse));
     }
 
     @PostMapping(value = "/assign")

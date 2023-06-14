@@ -18,7 +18,8 @@ import java.util.Set;
 @Table(name = "university")
 public class University extends AuditedEntity {
 
-    private String name;
+    private String abbreviation;
+    private String stagUrlAddress;
     @OneToMany(targetEntity = Subject.class, cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "university")
     @JsonIgnore
     private Set<Subject> subjects;
@@ -30,11 +31,11 @@ public class University extends AuditedEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof University target)) return false;
-        return Objects.equals(name, target.name);
+        return Objects.equals(abbreviation, target.abbreviation) && Objects.equals(stagUrlAddress, target.stagUrlAddress);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(abbreviation);
     }
 }

@@ -34,7 +34,8 @@ CREATE TABLE IF NOT EXISTS "roles_users_map" (
 DROP TABLE IF EXISTS "university";
 CREATE TABLE IF NOT EXISTS "university" (
     "id" BIGINT NOT NULL AUTO_INCREMENT,
-    "name" VARCHAR(50) NOT NULL DEFAULT '',
+    "abbreviation" VARCHAR(24) NOT NULL DEFAULT '',
+    "stag_url_address" VARCHAR(50) NOT NULL DEFAULT '',
     "created_at" TIMESTAMP NOT NULL,
     "created_by" VARCHAR(24) DEFAULT '',
     "updated_at" TIMESTAMP,

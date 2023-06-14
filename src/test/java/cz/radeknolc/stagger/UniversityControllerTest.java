@@ -49,28 +49,41 @@ public class UniversityControllerTest {
     public void createUniversity_ValidInput_CreatedStatusWithMessageAndUniversity() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/university/create").with(user(adminUser)).
                         contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CreateUniversityRequest("Karlova univerzita"))))
+                        .content(objectMapper.writeValueAsString(new CreateUniversityRequest("CHU", "www.example.com"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message").value("UNIVERSITY_CREATED"));
+                .andExpect(jsonPath("$.message").value("UNIVERSITY_CREATED"))
+                .andExpect(jsonPath("$.content.abbreviation").value("CHU"))
+                .andExpect(jsonPath("$.content.stagUrlAddress").value("www.example.com"));
     }
 
     @Test
     public void createUniversity_AlreadyExistingUniversity_ClientErrorStatusWithMessageAndValidationErrors() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/university/create").with(user(adminUser))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CreateUniversityRequest("Západočeská univerzita"))))
+                        .content(objectMapper.writeValueAsString(new CreateUniversityRequest("UWB", "www.example.com"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.message").value("VALIDATION_ERROR"))
-                .andExpect(jsonPath("$.content.name").value("UNIQUE"));
+                .andExpect(jsonPath("$.content.abbreviation").value("UNIQUE"));
+    }
+
+    @Test
+    public void createUniversity_NotEnteredUrlAddress_ClientErrorStatusWithMessageAndValidationErrors() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/university/create").with(user(adminUser))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new CreateUniversityRequest("UWB", ""))))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.message").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.content.stagUrlAddress").value("NOT_BLANK"));
     }
 
     @Test
     public void createUniversity_NotAuthorized_ForbiddenStatus() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/university/create").with(user(normalUser))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CreateUniversityRequest("Masarykova univerzita"))))
+                        .content(objectMapper.writeValueAsString(new CreateUniversityRequest("MUNI", "www.example.com"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.message").value("AUTH_ACCESS_DENIED"));
@@ -80,7 +93,7 @@ public class UniversityControllerTest {
     public void createUniversity_NotAuthenticated_UnauthorizedStatus() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/university/create").with(anonymous()).
                         contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CreateUniversityRequest("Jihočeská univerzita"))))
+                        .content(objectMapper.writeValueAsString(new CreateUniversityRequest("USB", "www.example.com"))))
                 .andExpect(status().isUnauthorized());
     }
 

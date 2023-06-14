@@ -32,7 +32,8 @@ public class UniversityService {
 
     public University createUniversity(CreateUniversityRequest createUniversityRequest) {
         University newUniversity = new University();
-        newUniversity.setName(createUniversityRequest.getName());
+        newUniversity.setAbbreviation(createUniversityRequest.getAbbreviation());
+        newUniversity.setStagUrlAddress(createUniversityRequest.getStagUrlAddress());
         newUniversity = universityRepository.save(newUniversity);
 
         if (newUniversity.getId() > 0) {
