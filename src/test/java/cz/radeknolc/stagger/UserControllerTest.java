@@ -35,7 +35,10 @@ public class UserControllerTest {
                         .content(objectMapper.writeValueAsString(new CreateUserRequest("register", "register", "register@stagger.cz"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message").value("USER_REGISTRATION_SUCCESS"));
+                .andExpect(jsonPath("$.message").value("USER_REGISTRATION_SUCCESS"))
+                .andExpect(jsonPath("$.content.username").value("register"))
+                .andExpect(jsonPath("$.content.password").doesNotExist())
+                .andExpect(jsonPath("$.content.emailAddress").value("register@stagger.cz"));
     }
 
     @Test

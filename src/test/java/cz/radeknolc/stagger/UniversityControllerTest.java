@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.radeknolc.stagger.model.User;
 import cz.radeknolc.stagger.model.request.CreateUniversityRequest;
 import cz.radeknolc.stagger.model.request.UserAssignUniversityRequest;
-import cz.radeknolc.stagger.model.request.UserDismissUniversity;
+import cz.radeknolc.stagger.model.request.UserDismissUniversityRequest;
 import cz.radeknolc.stagger.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
@@ -120,7 +120,7 @@ public class UniversityControllerTest {
 
     @Test
     public void userUniversities_ValidRequest_OkStatusWithUniversityList() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/university/user").with(user(normalUser)))
+        mockMvc.perform(MockMvcRequestBuilders.get("/university/user").param("userId", String.valueOf(normalUser.getId())).with(user(normalUser)))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isArray())
@@ -135,7 +135,7 @@ public class UniversityControllerTest {
 
     @Test
     public void userUniversities_NotAuthorized_ForbiddenStatus() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/university/user").with(user(adminUser)))
+        mockMvc.perform(MockMvcRequestBuilders.get("/university/user").param("userId", String.valueOf(normalUser.getId())).with(user(adminUser)))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.message").value("AUTH_ACCESS_DENIED"));
@@ -192,7 +192,7 @@ public class UniversityControllerTest {
     public void userDismissUniversity_ValidRequest_OkStatusWithMessage() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/university/dismiss").with(user(normalUser))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new UserDismissUniversity(1))))
+                        .content(objectMapper.writeValueAsString(new UserDismissUniversityRequest(1))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("UNIVERSITY_DISMISSED"));
@@ -202,7 +202,7 @@ public class UniversityControllerTest {
     public void userDismissUniversity_NotAssignedUniversity_ClientErrorWithMessage() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/university/dismiss").with(user(normalUser))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new UserDismissUniversity(2))))
+                        .content(objectMapper.writeValueAsString(new UserDismissUniversityRequest(2))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.message").value("UNIVERSITY_NOT_DISMISSED"));
@@ -212,7 +212,7 @@ public class UniversityControllerTest {
     public void userDismissUniversity_NotExistingUniversity_ClientErrorWithMessageAndValidationErrors() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/university/dismiss").with(user(normalUser))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new UserDismissUniversity(0))))
+                        .content(objectMapper.writeValueAsString(new UserDismissUniversityRequest(0))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.message").value("VALIDATION_ERROR"))
@@ -223,7 +223,7 @@ public class UniversityControllerTest {
     public void userDismissUniversity_NotAuthorized_ForbiddenStatus() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/university/dismiss").with(user(adminUser))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new UserDismissUniversity(1))))
+                        .content(objectMapper.writeValueAsString(new UserDismissUniversityRequest(1))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.message").value("AUTH_ACCESS_DENIED"));

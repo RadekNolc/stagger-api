@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDismissUniversity {
+public class UserDismissUniversityRequest {
 
     @Exists(entityClass = University.class, targetColumn = "id", message = "NOT_EXISTS")
     private long universityId;

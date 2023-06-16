@@ -1,4 +1,4 @@
-package cz.radeknolc.stagger.model.payload;
+package cz.radeknolc.stagger.model.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TokenResponse {
+public class UserDismissUniversityResponse {
 
-    private String token;
-
+    private boolean dismissed;
 }

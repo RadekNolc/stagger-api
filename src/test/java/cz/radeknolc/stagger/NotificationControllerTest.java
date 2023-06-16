@@ -89,7 +89,7 @@ public class NotificationControllerTest {
 
     @Test
     public void userNotifications_ValidRequest_OkStatusWithNotificationList() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/notification/user").with(user(normalUser)))
+        mockMvc.perform(MockMvcRequestBuilders.get("/notification/user").param("userId", String.valueOf(normalUser.getId())).with(user(normalUser)))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isArray())
@@ -100,5 +100,13 @@ public class NotificationControllerTest {
     public void userNotifications_NotAuthenticated_UnauthorizedStatus() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/notification/user").with(anonymous()))
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void userNotifications_InvalidUserIdRequest_UnauthorizedStatus() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/notification/user").param("userId", String.valueOf(adminUser.getId())).with(user(normalUser)))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.message").value("AUTH_USER_VERIFY_ERROR"));
     }
 }

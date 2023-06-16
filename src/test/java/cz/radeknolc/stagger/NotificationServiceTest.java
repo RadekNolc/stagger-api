@@ -5,14 +5,11 @@ import cz.radeknolc.stagger.model.NotificationState;
 import cz.radeknolc.stagger.model.User;
 import cz.radeknolc.stagger.repository.UserRepository;
 import cz.radeknolc.stagger.service.NotificationService;
-import cz.radeknolc.stagger.util.AuthenticationUtils;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -43,20 +40,12 @@ public class NotificationServiceTest {
 
     @Test
     public void readNotification_ReadOwnNotification_True() {
-        try (MockedStatic<AuthenticationUtils> authenticationUtils = Mockito.mockStatic(AuthenticationUtils.class)) {
-            authenticationUtils.when(AuthenticationUtils::getLoggedUser).thenReturn(normalUser);
-
-            assertTrue(notificationService.readNotification(2));
-        }
+        assertTrue(notificationService.readNotification(2, normalUser.getId()));
     }
 
     @Test
     public void readNotification_ReadOthersNotification_False() {
-        try (MockedStatic<AuthenticationUtils> authenticationUtils = Mockito.mockStatic(AuthenticationUtils.class)) {
-            authenticationUtils.when(AuthenticationUtils::getLoggedUser).thenReturn(adminUser);
-
-            assertFalse(notificationService.readNotification(2));
-        }
+        assertFalse(notificationService.readNotification(2, adminUser.getId()));
     }
 
     @Test

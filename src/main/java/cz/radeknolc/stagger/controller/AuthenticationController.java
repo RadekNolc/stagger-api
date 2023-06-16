@@ -1,10 +1,10 @@
 package cz.radeknolc.stagger.controller;
 
 import cz.radeknolc.stagger.model.User;
-import cz.radeknolc.stagger.model.payload.ServerResponse;
-import cz.radeknolc.stagger.model.payload.TokenResponse;
-import cz.radeknolc.stagger.model.payload.UserDetailsResponse;
-import cz.radeknolc.stagger.model.request.LoginRequest;
+import cz.radeknolc.stagger.model.response.ServerResponse;
+import cz.radeknolc.stagger.model.response.TokenResponse;
+import cz.radeknolc.stagger.model.response.VerifyTokenResponse;
+import cz.radeknolc.stagger.model.request.TokenRequest;
 import cz.radeknolc.stagger.model.request.VerifyTokenRequest;
 import cz.radeknolc.stagger.util.AuthenticationUtils;
 import jakarta.validation.Valid;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static cz.radeknolc.stagger.model.payload.ServerResponseMessage.AUTH_TOKEN_INVALID;
+import static cz.radeknolc.stagger.model.response.ServerResponseMessage.*;
 
 @RestController
 @RequestMapping(path = "authentication")
@@ -33,22 +33,19 @@ public class AuthenticationController {
     private AuthenticationUtils authenticationUtils;
 
     @PostMapping(value = "/authenticate")
-    public ResponseEntity<TokenResponse> authenticate(@Valid @RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+    public ResponseEntity<ServerResponse<TokenResponse>> authenticate(@Valid @RequestBody TokenRequest request) {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = authenticationUtils.generateToken(authentication);
-
-        return ResponseEntity.ok(new TokenResponse(token));
+        TokenResponse response = new TokenResponse(authenticationUtils.generateToken(authentication));
+        return ResponseEntity.ok(new ServerResponse<>(GENERAL_SUCCESS, response));
     }
 
     @PostMapping(value = "/verify")
-    public ResponseEntity<ServerResponse<UserDetailsResponse>> verifyToken(@RequestBody VerifyTokenRequest verifyTokenRequest) {
-        if (authenticationUtils.validateToken(verifyTokenRequest.getToken())) {
-            User user = authenticationUtils.getUserFromToken(verifyTokenRequest.getToken());
-            UserDetailsResponse userDetailsResponse = new UserDetailsResponse(user);
-            if (user != null) {
-                return ResponseEntity.ok(new ServerResponse<>(userDetailsResponse));
-            }
+    public ResponseEntity<ServerResponse<VerifyTokenResponse>> verifyToken(@Valid @RequestBody VerifyTokenRequest request) {
+        if (authenticationUtils.validateToken(request.getToken())) {
+            User user = authenticationUtils.getUserFromToken(request.getToken());
+            VerifyTokenResponse response = new VerifyTokenResponse(user);
+            return ResponseEntity.ok(new ServerResponse<>(GENERAL_SUCCESS, response));
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ServerResponse<>(AUTH_TOKEN_INVALID));

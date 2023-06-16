@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+import static cz.radeknolc.stagger.model.response.ServerResponseMessage.AUTH_USER_VERIFY_ERROR;
+
 @Component
 @Slf4j
 public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
@@ -16,6 +18,6 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
         log.error("Unauthorized: {}", authException.getMessage());
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, String.valueOf(AUTH_USER_VERIFY_ERROR));
     }
 }

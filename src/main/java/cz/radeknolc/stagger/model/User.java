@@ -1,6 +1,5 @@
 package cz.radeknolc.stagger.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,7 +26,6 @@ public class User extends AuditedEntity implements UserDetails {
     private static final long serialVersionUID = 1430053388500676755L;
 
     private String username;
-    @JsonIgnore
     private String password;
     private String emailAddress;
     private String phoneNumber;
@@ -36,14 +34,11 @@ public class User extends AuditedEntity implements UserDetails {
     private boolean isLocked;
     private boolean isCredentialsExpired;
     @OneToMany(targetEntity = UserRole.class, fetch = FetchType.EAGER, mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JsonIgnore
     private Set<UserRole> roles;
     @OneToMany(targetEntity = UserUniversity.class, fetch = FetchType.EAGER, mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JsonIgnore
     private Set<UserUniversity> universities;
     @OneToMany(targetEntity = Notification.class, fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.REMOVE)
     @OrderBy("createdAt DESC")
-    @JsonIgnore
     private Set<Notification> notifications;
 
     @Override

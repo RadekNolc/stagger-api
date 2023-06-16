@@ -1,6 +1,6 @@
 package cz.radeknolc.stagger.controller;
 
-import cz.radeknolc.stagger.model.payload.ServerResponse;
+import cz.radeknolc.stagger.model.response.ServerResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
-import static cz.radeknolc.stagger.model.payload.ServerResponseMessage.*;
+import static cz.radeknolc.stagger.model.response.ServerResponseMessage.*;
 
 @RestControllerAdvice
 public class ControllerExceptionHandler {

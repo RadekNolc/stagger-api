@@ -44,27 +44,14 @@ public class UniversityService {
     }
 
     public boolean assignUser(long universityId, long userId) {
-        Optional<University> university = universityRepository.findById(universityId);
-        Optional<User> user = userRepository.findById(userId);
-
-        // University or user does not exist
-        if (university.isEmpty() || user.isEmpty()) {
-            return false;
-        }
-
-        UserUniversity userUniversity = new UserUniversity(user.get(), university.get());
-
-        // Checking if user is already assigned
-        if (user.get().getUniversities().contains(userUniversity)) {
-            return false;
-        }
-
-        user.get().getUniversities().add(userUniversity);
-        userRepository.save(user.get());
-        return true;
+        return dismissAssignUser(universityId, userId, true);
     }
 
     public boolean dismissUser(long universityId, long userId) {
+        return dismissAssignUser(universityId, userId, false);
+    }
+
+    private boolean dismissAssignUser(long universityId, long userId, boolean assign) {
         Optional<University> university = universityRepository.findById(universityId);
         Optional<User> user = userRepository.findById(userId);
 
@@ -75,11 +62,21 @@ public class UniversityService {
 
         UserUniversity userUniversity = new UserUniversity(user.get(), university.get());
 
-        if (!user.get().getUniversities().contains(userUniversity)) {
-            return false;
+        if (assign) {
+            // Checking if user is already assigned
+            if (user.get().getUniversities().contains(userUniversity)) {
+                return false;
+            }
+
+            user.get().getUniversities().add(userUniversity);
+        } else {
+            if (!user.get().getUniversities().contains(userUniversity)) {
+                return false;
+            }
+
+            user.get().getUniversities().remove(userUniversity);
         }
 
-        user.get().getUniversities().remove(userUniversity);
         userRepository.save(user.get());
         return true;
     }

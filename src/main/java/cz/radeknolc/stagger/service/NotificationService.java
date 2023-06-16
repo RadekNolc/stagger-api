@@ -4,7 +4,6 @@ import cz.radeknolc.stagger.model.Notification;
 import cz.radeknolc.stagger.model.User;
 import cz.radeknolc.stagger.repository.NotificationRepository;
 import cz.radeknolc.stagger.repository.UserRepository;
-import cz.radeknolc.stagger.util.AuthenticationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,19 +25,23 @@ public class NotificationService {
         return user.map(value -> new ArrayList<>(value.getNotifications().stream().filter(Notification -> !Notification.isRead()).toList())).orElseGet(ArrayList::new);
     }
 
-    public boolean readNotification(long notificationId) {
-        Optional<Notification> n = notificationRepository.findById(notificationId);
-        if (n.isPresent()) {
-            Notification notification = n.get();
-            User currentUser = AuthenticationUtils.getLoggedUser();
-            if (currentUser != null && currentUser.getId() == notification.getUser().getId()) {
-                notification.setRead(true);
-                notificationRepository.save(notification);
-                return true;
-            }
+    public boolean readNotification(long notificationId, long userId) {
+        boolean result = false;
+        Optional<Notification> notification = notificationRepository.findById(notificationId);
+        Optional<User> user = userRepository.findById(userId);
+
+        if (user.isEmpty() || notification.isEmpty()) {
+            return result;
         }
 
-        return false;
+        if (!notification.get().getUser().equals(user.get())) {
+            return result;
+        }
+
+        result = true;
+        notification.get().setRead(result);
+        notificationRepository.save(notification.get());
+        return result;
     }
 
     public Notification createNotification(Notification notification, long receiverId) {

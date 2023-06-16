@@ -1,6 +1,5 @@
 package cz.radeknolc.stagger.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,11 +16,9 @@ public class UserUniversity extends BaseEntity {
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    @JsonIgnore
     private User user;
     @ManyToOne(targetEntity = University.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "university_id", referencedColumnName = "id", nullable = false)
-    @JsonIgnore
     private University university;
 
     @Override

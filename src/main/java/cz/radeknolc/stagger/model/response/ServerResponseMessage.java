@@ -1,6 +1,13 @@
-package cz.radeknolc.stagger.model.payload;
+package cz.radeknolc.stagger.model.response;
 
 public enum ServerResponseMessage {
+
+    /*
+     GENERAL
+    */
+    GENERAL_OK,
+    GENERAL_SUCCESS,
+    GENERAL_ERROR,
 
     /*
      AUTHENTICATION
@@ -12,6 +19,7 @@ public enum ServerResponseMessage {
     AUTH_CREDENTIALS_EXPIRED, // Expired credentials
     AUTH_ACCESS_DENIED, // No privileges
     AUTH_TOKEN_INVALID, // Invalid token from verification
+    AUTH_USER_VERIFY_ERROR, // Mismatching ID in request with token in header
 
     /*
      VALIDATION
@@ -31,4 +39,10 @@ public enum ServerResponseMessage {
     USER
      */
     USER_REGISTRATION_SUCCESS, // User registration success
+
+    /*
+    NOTIFICATION
+     */
+    NOTIFICATION_READ, // Has been notification marked as read
+    NOTIFICATION_NOT_READ, // Has not been notification marked as read
 }

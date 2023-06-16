@@ -2,7 +2,7 @@ package cz.radeknolc.stagger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.radeknolc.stagger.model.User;
-import cz.radeknolc.stagger.model.request.LoginRequest;
+import cz.radeknolc.stagger.model.request.TokenRequest;
 import cz.radeknolc.stagger.model.request.VerifyTokenRequest;
 import cz.radeknolc.stagger.repository.UserRepository;
 import cz.radeknolc.stagger.util.AuthenticationUtils;
@@ -59,25 +59,25 @@ public class AuthenticationControllerTest {
         // Administrator authentication
         mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate").with(anonymous())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new LoginRequest("admin", "admin"))))
+                        .content(objectMapper.writeValueAsString(new TokenRequest("admin", "admin"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token").isNotEmpty());
+                .andExpect(jsonPath("$.content.token").isNotEmpty());
 
         // User authentication
         mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate").with(anonymous())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new LoginRequest("user", "user"))))
+                        .content(objectMapper.writeValueAsString(new TokenRequest("user", "user"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token").isNotEmpty());
+                .andExpect(jsonPath("$.content.token").isNotEmpty());
     }
 
     @Test
     public void authenticate_NotExistingUser_ClientErrorStatusWithMessage() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate").with(anonymous())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new LoginRequest("test", "123"))))
+                        .content(objectMapper.writeValueAsString(new TokenRequest("test", "123"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.message").value("AUTH_BAD_CREDENTIALS"));
@@ -87,7 +87,7 @@ public class AuthenticationControllerTest {
     public void authenticate_BlankFields_ClientErrorStatusWithMessageAndValidationErrors() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate").with(anonymous())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new LoginRequest("", ""))))
+                        .content(objectMapper.writeValueAsString(new TokenRequest("", ""))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("VALIDATION_ERROR"))
@@ -99,7 +99,7 @@ public class AuthenticationControllerTest {
     public void authenticate_WrongCredentials_ClientErrorStatusWithMessage() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate").with(anonymous())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new LoginRequest("admin", "wrongpassword"))))
+                        .content(objectMapper.writeValueAsString(new TokenRequest("admin", "wrongpassword"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.message").value("AUTH_BAD_CREDENTIALS"));
@@ -109,7 +109,7 @@ public class AuthenticationControllerTest {
     public void authenticate_DisabledAccount_ClientErrorStatusWithMessage() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate").with(anonymous())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new LoginRequest("inactive", "inactive"))))
+                        .content(objectMapper.writeValueAsString(new TokenRequest("inactive", "inactive"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.message").value("AUTH_ACCOUNT_DISABLED"));
@@ -119,7 +119,7 @@ public class AuthenticationControllerTest {
     public void authenticate_ExpiredAccount_ClientErrorStatusWithMessage() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate").with(anonymous())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new LoginRequest("expired", "expired"))))
+                        .content(objectMapper.writeValueAsString(new TokenRequest("expired", "expired"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.message").value("AUTH_ACCOUNT_EXPIRED"));
@@ -129,7 +129,7 @@ public class AuthenticationControllerTest {
     public void authenticate_LockedAccount_ClientErrorStatusWithMessage() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate").with(anonymous())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new LoginRequest("locked", "locked"))))
+                        .content(objectMapper.writeValueAsString(new TokenRequest("locked", "locked"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.message").value("AUTH_ACCOUNT_LOCKED"));
@@ -139,7 +139,7 @@ public class AuthenticationControllerTest {
     public void authenticate_CredentialsExpired_ClientErrorStatusWithMessage() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/authentication/authenticate").with(anonymous())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new LoginRequest("credentials_expired", "credentials_expired"))))
+                        .content(objectMapper.writeValueAsString(new TokenRequest("credentials_expired", "credentials_expired"))))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.message").value("AUTH_CREDENTIALS_EXPIRED"));

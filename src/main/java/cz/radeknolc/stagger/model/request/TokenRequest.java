@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginRequest {
+public class TokenRequest {
 
     @NotBlank(message = "NOT_BLANK")
     private String username;

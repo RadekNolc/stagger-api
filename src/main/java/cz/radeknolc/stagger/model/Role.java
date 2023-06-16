@@ -1,6 +1,5 @@
 package cz.radeknolc.stagger.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +24,6 @@ public class Role extends BaseEntity implements GrantedAuthority {
     @Enumerated(EnumType.STRING)
     private RoleName name;
     @OneToMany(mappedBy = "role")
-    @JsonIgnore
     private Set<UserRole> users;
 
     @Override
