@@ -158,11 +158,7 @@ public class AuthenticationControllerTest {
                 .andExpect(jsonPath("$.content").isNotEmpty())
                 .andExpect(jsonPath("$.content.id").value(2))
                 .andExpect(jsonPath("$.content.username").value("user"))
-                .andExpect(jsonPath("$.content.emailAddress").value("user@stagger.cz"))
-                .andExpect(jsonPath("$.content.phoneNumber").value("123456789"))
-                .andExpect(jsonPath("$.content.roles").isArray())
-                .andExpect(jsonPath("$.content.roles.length()").value(1))
-                .andExpect(jsonPath("$.content.roles[?(@ == 'ROLE_USER')]").exists());
+                .andExpect(jsonPath("$.content.emailAddress").value("user@stagger.cz"));
 
         authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken("admin", "admin"));
         token = authenticationUtils.generateToken(authentication);
@@ -175,11 +171,7 @@ public class AuthenticationControllerTest {
                 .andExpect(jsonPath("$.content").isNotEmpty())
                 .andExpect(jsonPath("$.content.id").value(1))
                 .andExpect(jsonPath("$.content.username").value("admin"))
-                .andExpect(jsonPath("$.content.emailAddress").value("admin@stagger.cz"))
-                .andExpect(jsonPath("$.content.phoneNumber").value("123456789"))
-                .andExpect(jsonPath("$.content.roles").isArray())
-                .andExpect(jsonPath("$.content.roles.length()").value(1))
-                .andExpect(jsonPath("$.content.roles[?(@ == 'ROLE_ADMIN')]").exists());
+                .andExpect(jsonPath("$.content.emailAddress").value("admin@stagger.cz"));
     }
 
     @Test

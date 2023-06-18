@@ -128,6 +128,14 @@ public class UniversityControllerTest {
     }
 
     @Test
+    public void userUniversities_InvalidUserIdRequest_UnauthorizedStatus() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/university/user").param("userId", String.valueOf(adminUser.getId())).with(user(normalUser)))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.message").value("AUTH_USER_VERIFY_ERROR"));
+    }
+
+    @Test
     public void userUniversities_NotAuthenticated_UnauthorizedStatus() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/university/user").with(anonymous()))
                 .andExpect(status().isUnauthorized());

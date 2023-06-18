@@ -98,7 +98,7 @@ public class NotificationControllerTest {
 
     @Test
     public void userNotifications_NotAuthenticated_UnauthorizedStatus() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/notification/user").with(anonymous()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/notification/user").param("userId", String.valueOf(normalUser.getId())).with(anonymous()))
                 .andExpect(status().isUnauthorized());
     }
 
