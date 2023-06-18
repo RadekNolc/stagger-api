@@ -29,6 +29,8 @@ public class User extends AuditedEntity implements UserDetails {
     private String password;
     private String emailAddress;
     private String phoneNumber;
+    private int coins;
+    private int maxCoins;
     private boolean isEnabled;
     private boolean isExpired;
     private boolean isLocked;

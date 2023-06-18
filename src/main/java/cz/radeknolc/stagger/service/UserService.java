@@ -28,6 +28,38 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    public int addCoins(long userId, int coins) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isEmpty() || coins < 0) {
+            return -1;
+        }
+
+        int updatedCoins = user.get().getCoins() + coins;
+        if (updatedCoins > user.get().getMaxCoins()) {
+            updatedCoins = user.get().getMaxCoins();
+        }
+
+        user.get().setCoins(updatedCoins);
+        userRepository.save(user.get());
+        return updatedCoins;
+    }
+
+    public int removeCoins(long userId, int coins) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isEmpty() || coins < 0) {
+            return -1;
+        }
+
+        int updatedCoins = user.get().getCoins() - coins;
+        if (updatedCoins < 0) {
+            updatedCoins = 0;
+        }
+
+        user.get().setCoins(updatedCoins);
+        userRepository.save(user.get());
+        return updatedCoins;
+    }
+
     public User registerUser(CreateUserRequest createUserRequest) {
         Optional<Role> role = roleRepository.findByName(RoleName.USER);
         User user = new User();
