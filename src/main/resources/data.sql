@@ -51,3 +51,5 @@ INSERT INTO "notification" ("id", "user_id", "category", "title", "description",
 VALUES (4, 2, 'UPDATE', 'TEST_ALERT4', 'Testing alert4', 'technology-2', 'SUCCESS', 0, '2023-05-19 10:13:47', 'dataSQL', NULL, NULL);
 INSERT INTO "notification" ("id", "user_id", "category", "title", "description", "icon", "state", "is_read", "created_at", "created_by", "updated_at", "updated_by")
 VALUES (5, 2, 'ALERT', 'TEST_ALERT5', 'Testing alert5', 'technology-2', 'SUCCESS', 1, '2023-05-19 10:13:47', 'dataSQL', NULL, NULL);
+INSERT INTO "notification" ("id", "user_id", "category", "title", "description", "icon", "state", "is_read", "created_at", "created_by", "updated_at", "updated_by")
+VALUES (6, 1, 'ALERT', 'TEST_ALERT6', 'Testing alert6', 'technology-2', 'PRIMARY', 0, '2023-05-20 10:13:47', 'dataSQL', NULL, NULL);

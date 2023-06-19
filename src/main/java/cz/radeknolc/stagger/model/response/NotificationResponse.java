@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class NotificationResponse {
     private String icon;
     private NotificationState state;
     private boolean isRead;
+    private LocalDateTime sentDateTime;
 
     public NotificationResponse(Notification notification) {
         id = notification.getId();
@@ -33,6 +35,7 @@ public class NotificationResponse {
         icon = notification.getIcon();
         state = notification.getState();
         isRead = notification.isRead();
+        sentDateTime = notification.getCreatedAt();
     }
 
     public static List<NotificationResponse> parseList(List<Notification> notifications) {

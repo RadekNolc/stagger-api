@@ -40,7 +40,6 @@ public class User extends AuditedEntity implements UserDetails {
     @OneToMany(targetEntity = UserUniversity.class, fetch = FetchType.EAGER, mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<UserUniversity> universities;
     @OneToMany(targetEntity = Notification.class, fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.REMOVE)
-    @OrderBy("createdAt DESC")
     private Set<Notification> notifications;
 
     @Override

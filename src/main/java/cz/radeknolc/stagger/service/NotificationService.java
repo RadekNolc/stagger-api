@@ -1,5 +1,6 @@
 package cz.radeknolc.stagger.service;
 
+import cz.radeknolc.stagger.model.AuditedEntity;
 import cz.radeknolc.stagger.model.Notification;
 import cz.radeknolc.stagger.model.User;
 import cz.radeknolc.stagger.repository.NotificationRepository;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +24,7 @@ public class NotificationService {
 
     public List<Notification> getUserNotifications(long userId) {
         Optional<User> user = userRepository.findById(userId);
-        return user.map(value -> new ArrayList<>(value.getNotifications().stream().filter(Notification -> !Notification.isRead()).toList())).orElseGet(ArrayList::new);
+        return user.map(u -> u.getNotifications().stream().filter(n -> !n.isRead()).sorted(Comparator.comparing(AuditedEntity::getCreatedAt).reversed()).toList()).orElseGet(ArrayList::new);
     }
 
     public boolean readNotification(long notificationId, long userId) {

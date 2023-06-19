@@ -75,6 +75,8 @@ public class NotificationServiceTest {
         List<Notification> notifications = notificationService.getUserNotifications(normalUser.getId());
         assertNotNull(notifications);
         assertEquals(3, notifications.size());
+        assertEquals(4, notifications.get(0).getId()); // sorting test
+        assertEquals(1, notifications.get(2).getId()); // sorting test
     }
 
     @Test
